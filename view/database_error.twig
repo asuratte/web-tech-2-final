@@ -1,0 +1,10 @@
+{{ include('/shared/header.twig') }}
+{{ include('/shared/navigation.twig') }}
+<div class="container py-4 text-center">
+<main class="database-error">
+    <h2>Database Error</h2>
+    <p>There was an error connecting to the database.</p>
+    <p>Error message: {{ error_message|e }}</p>
+</main>
+</div>
+{{ include('/shared/footer.twig') }}

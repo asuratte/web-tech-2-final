@@ -1,14 +1,15 @@
 <?php
+
 require_once './model/Database.php';
 require_once './model/Validator.php';
 require_once 'autoload.php';
 
-class Controller
-{
+class Controller {
+
     private $action;
     private $db;
     private $twig;
-    
+
     /**
      * Instantiates a new controller
      */
@@ -16,21 +17,21 @@ class Controller
         $loader = new Twig\Loader\FilesystemLoader('./view');
         $this->twig = new Twig\Environment($loader);
         $this->setSecureConnectionAndSession();
-        //$this->connectToDatabase();
+        $this->connectToDatabase();
         $this->action = $this->getAction();
     }
-    
+
     /**
      * Initiates processing of the current action
      */
     public function invoke() {
-        switch($this->action) {
+        switch ($this->action) {
             default:
                 $this->processShowHomePage();
                 break;
         }
     }
-    
+
     /**
      * Processes request
      */
@@ -38,7 +39,7 @@ class Controller
         $template = $this->twig->load('home.twig');
         echo $template->render();
     }
-    
+
     /**
      * Gets the action from $_GET or $_POST array
      * 
@@ -54,7 +55,7 @@ class Controller
         }
         return $action;
     }
-    
+
     /**
      * Sets up HTTPS connection and session
      */
@@ -70,10 +71,10 @@ class Controller
         session_start();
         $this->twig->addGlobal('session', $_SESSION);
     }
-    
+
     /**
      * Connects to the database
-     
+     */
     private function connectToDatabase() {
         $this->db = new Database();
         if (!$this->db->isConnected()) {
@@ -82,5 +83,6 @@ class Controller
             echo $template->render(['error_message' => $error_message]);
             exit();
         }
-    }*/
+    }
+
 }
