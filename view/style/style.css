@@ -1,0 +1,163 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navbar-dark a.navbar-brand {
+    font-family: 'Courgette', cursive;
+    font-size: 1.25rem;
+    color: #ff9933;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    justify-content: flex-end;
+}
+
+.navbar-dark .navbar-nav .active>.nav-link:before {
+    content: "\2022";
+    color: #ff9933;
+    padding-right: .35rem;
+}
+
+.navbar-dark .navbar-nav .active>.nav-link:after {
+    content: "\2022";
+    color: #ff9933;
+    padding-left: .35rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #f8f9fa;
+}
+
+.bg-custom-dark {
+    background-color: #1a1d21;
+}
+
+.bg-custom-light {
+    background-color: #f8f8f6;
+}
+
+a,
+a:visited {
+    color: #ff9933;
+    font-weight: 600;
+}
+
+a:hover,
+a:active {
+    color: #ff9933;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+h1 {
+    font-family: 'Courgette', cursive;
+    font-size: 2rem;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+section.benefits i {
+    font-size: 3rem;
+    color: #ff9933;
+}
+
+section.home-get-started .image-wrap {
+    text-align: left;
+}
+
+.card-col {
+    margin-bottom: .5rem;
+}
+
+div#accordion .card button {
+    color: #343a40;
+    font-weight: 600;
+    white-space: normal;
+}
+
+form button.btn.btn-primary {
+    background-color: #ff9933;
+    border: 2px solid #ff9933;
+    font-weight: 700;
+}
+
+form button.btn.btn-primary:hover {
+    background-color: #ffffff;
+    color: #ff9933;
+    border-color: #ff9933;
+}
+
+.form-group>label {
+    font-weight: 700;
+}
+
+label.form-required:after {
+    content: "*";
+    padding-left: 4px;
+    color: #ff9933;
+}
+
+.form-error {
+    color: firebrick;
+    padding-top: 3px;
+    font-style: italic;
+}
+
+p.field-description {
+    font-size: .85rem;
+    font-style: italic;
+    margin-bottom: .5rem;
+}
+
+.price-calculated td.label:not(.total-label) {
+    font-weight: 500;
+}
+
+.price-calculated tr.total {
+    font-weight: 700;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .card-col {
+        margin-bottom: 2rem;
+    }
+
+    .navbar-dark a.navbar-brand {
+        font-size: 1.5rem;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .navbar-dark a.navbar-brand {
+        font-size: 2rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .price-calculated table {
+        max-width: 80%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    section.home-get-started .image-wrap {
+        text-align: right;
+    }
+
+    .price-calculated table {
+        max-width: 50%;
+    }
+}
