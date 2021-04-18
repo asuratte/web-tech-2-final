@@ -1,60 +1,58 @@
 {{ include('/shared/header.twig') }}
-<header>
 {{ include('/shared/navigation.twig') }}
 <div class="hero">
-            <picture>
-                <source srcset="./view/images/home-hero-large.jpg" type="image/jpeg" media="(min-width: 1001px)">
-                <source srcset="./view/images/home-hero-medium.jpg" type="image/jpeg" media="(min-width: 601px)">
-                <source srcset="./view/images/home-hero-small.jpg" type="image/jpeg" media="(max-width: 600px)">
-                <img src="./view/images/home-hero-large.jpg" class="img-fluid" alt="Madison Street Meal Prep">
-            </picture>
+    <picture>
+        <source srcset="./view/images/home-hero-large.jpg" type="image/jpeg" media="(min-width: 1001px)">
+        <source srcset="./view/images/home-hero-medium.jpg" type="image/jpeg" media="(min-width: 601px)">
+        <source srcset="./view/images/home-hero-small.jpg" type="image/jpeg" media="(max-width: 600px)">
+        <img src="./view/images/home-hero-large.jpg" class="img-fluid" alt="Madison Street Meal Prep">
+    </picture>
+</div>
+<div class="container py-4 text-center">
+    <main class="w-75 mx-auto">
+        <h1>Madison Street Meal Prep</h1>
+        <p>We're a full-service meal prep company serving the Chicago Northwest Suburbs. We take care of the meal
+            planning, shopping, cooking, portioning, and delivery for you – just heat and eat. Madison Street Meal
+            Prep takes the guesswork out of eating healthy and saves you money by helping you avoid last-minute fast
+            food orders.</p>
+    </main>
+</div>
+<div class="container pt-2 pb-3 text-center">
+    <section class="row benefits">
+        <div class="col-md-4 pb-3">
+            <i class="fas fa-clock pb-2"></i>
+            <h2>Save time</h2>
+            <p>Whether you're a busy professional, student, new parent, or just looking to reclaim some time in your
+                schedule, we can help! Let us do the hard work of meal planning and cooking.</p>
         </div>
-    </header>
-    <div class="container py-4 text-center">
-        <main class="w-75 mx-auto">
-            <h1>Madison Street Meal Prep</h1>
-            <p>We're a full-service meal prep company serving the Chicago Northwest Suburbs. We take care of the meal
-                planning, shopping, cooking, portioning, and delivery for you – just heat and eat. Madison Street Meal
-                Prep takes the guesswork out of eating healthy and saves you money by helping you avoid last-minute fast
-                food orders.</p>
-        </main>
-    </div>
-    <div class="container pt-2 pb-3 text-center">
-        <section class="row benefits">
-            <div class="col-md-4 pb-3">
-                <i class="fas fa-clock pb-2"></i>
-                <h2>Save time</h2>
-                <p>Whether you're a busy professional, student, new parent, or just looking to reclaim some time in your
-                    schedule, we can help! Let us do the hard work of meal planning and cooking.</p>
-            </div>
-            <div class="col-md-4 pb-3">
-                <i class="fas fa-carrot pb-2"></i>
-                <h2>Eat healthier</h2>
-                <p>We offer a variety of meal plans to accommodate different diets and preferences. All of our meal
-                    plans are vegetable-forward and nutrient-dense.</p>
-            </div>
-            <div class="col-md-4 pb-3">
-                <i class="fas fa-utensils pb-2"></i>
-                <h2>Try new foods</h2>
-                <p>Tired of your current meal rotation? Our meal plans are designed to avoid repetition. We build our
-                    meals around fresh, local, seasonally available produce.</p>
-            </div>
-        </section>
-    </div>
-    <div class="container-fluid bg-custom-light">
-        <section class="container py-5 row mx-auto home-get-started">
-            <div class="col-lg-6 col-md-8">
-                <h3>Ready to get started?</h3>
-                <p>Contact us to place an order or talk to a meal prep specialist.</p>
-                <address>
-                    Email: <a href="mailto:hello@madisonstreetmealprep.com">hello@madisonstreetmealprep.com</a><br>
-                    Phone: <a href="tel:+19999999999">(999) 999-9999</a>
-                </address>
-            </div>
-            <div class="col-lg-6 col-md-4 image-wrap">
-                <img src="./view/images/home-get-started.jpg" class="img-thumbnail img-fluid"
-                    alt="Get started with Madison Street Meal Prep">
-            </div>
-        </section>
-    </div>
+        <div class="col-md-4 pb-3">
+            <i class="fas fa-carrot pb-2"></i>
+            <h2>Eat healthier</h2>
+            <p>We offer a variety of meal plans to accommodate different diets and preferences. All of our meal
+                plans are vegetable-forward and nutrient-dense.</p>
+        </div>
+        <div class="col-md-4 pb-3">
+            <i class="fas fa-utensils pb-2"></i>
+            <h2>Try new foods</h2>
+            <p>Tired of your current meal rotation? Our meal plans are designed to avoid repetition. We build our
+                meals around fresh, local, seasonally available produce.</p>
+        </div>
+    </section>
+</div>
+<div class="container-fluid bg-custom-light">
+    <section class="container py-5 row mx-auto home-get-started">
+        <div class="col-lg-6 col-md-8">
+            <h3>Ready to get started?</h3>
+            <p>Contact us to place an order or talk to a meal prep specialist.</p>
+            <address>
+                Email: <a href="mailto:hello@madisonstreetmealprep.com">hello@madisonstreetmealprep.com</a><br>
+                Phone: <a href="tel:+19999999999">(999) 999-9999</a>
+            </address>
+        </div>
+        <div class="col-lg-6 col-md-4 image-wrap">
+            <img src="./view/images/home-get-started.jpg" class="img-thumbnail img-fluid"
+                 alt="Get started with Madison Street Meal Prep">
+        </div>
+    </section>
+</div>
 {{ include('/shared/footer.twig') }}
