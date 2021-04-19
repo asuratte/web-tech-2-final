@@ -39,6 +39,10 @@ class Database {
         return $this->error_message;
     }
 
+    public function getDB() {
+        return $this->db;
+    }
+
 }
 
 ?>

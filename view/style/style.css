@@ -77,6 +77,14 @@ section.home-get-started .image-wrap {
     margin-bottom: .5rem;
 }
 
+.card-list {
+    list-style-type: none;
+}
+
+.card-list li span {
+    font-weight: bold;
+}
+
 div#accordion .card button {
     color: #343a40;
     font-weight: 600;

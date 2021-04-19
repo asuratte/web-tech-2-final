@@ -2,12 +2,14 @@
 
 require_once './model/Database.php';
 require_once './model/Validator.php';
+require_once './model/MealPlansTable.php';
 require_once 'autoload.php';
 
 class Controller {
 
     private $action;
     private $db;
+    private $meal_plans_table;
     private $twig;
 
     /**
@@ -18,6 +20,13 @@ class Controller {
         $this->twig = new Twig\Environment($loader);
         $this->setSecureConnectionAndSession();
         $this->connectToDatabase();
+        if ($this->db->isConnected()) {
+            $this->meal_plans_table = new MealPlansTable($this->db);
+        } else {
+            $error_message = $this->db->getErrorMessage();
+            $template = $this->twig->load('database_error.twig');
+            exit();
+        }
         $this->action = $this->getAction();
     }
 
@@ -31,6 +40,9 @@ class Controller {
                 break;
             case 'Show FAQ':
                 $this->processShowFAQPage();
+                break;
+            case 'Show Meal Options':
+                $this->processShowMealOptionsPage();
                 break;
             default:
                 $this->processShowHomePage();
@@ -49,6 +61,12 @@ class Controller {
     private function processShowFAQPage() {
         $template = $this->twig->load('faq.twig');
         echo $template->render();
+    }
+    
+    private function processShowMealOptionsPage() {
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $template = $this->twig->load('meal_options.twig');
+        echo $template->render(['meal_plans' => $meal_plans]);
     }
 
 

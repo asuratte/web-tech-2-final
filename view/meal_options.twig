@@ -1,1 +1,28 @@
-{# empty Twig template #}
+{{ include('/shared/header.twig') }}
+{{ include('/shared/navigation.twig') }}
+<div class="container py-4 text-center">
+    <main class="w-75 mx-auto">
+        <h1>Meal Options</h1>
+        <p class="w-75 mx-auto">We have a wide variety of meal plans suited for different dietary preferences. Learn
+            more below and <a href="pricing.html">visit our pricing page</a> for plan pricing information.</p>
+        <div class="meal-card-container row card-deck mt-5">
+            {% for meal_plan in meal_plans %}
+                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                    <div class="card">
+                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage }}" alt="Standard">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ meal_plan.planName }}</h2>
+                            <p class="card-text">{{ meal_plan.planDescription }}</p>
+                            <ul class="card-list pl-0">
+                                <li class="mb-1"><span>Breakfast:</span> ${{ meal_plan.breakfastPrice }}/ea.</li>
+                                <li class="mb-1"><span>Lunch:</span> ${{ meal_plan.lunchPrice }}/ea.</li>
+                                <li class="mb-1"><span>Dinner:</span> ${{ meal_plan.dinnerPrice }}/ea.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+{{ include('/shared/footer.twig') }}
