@@ -133,6 +133,22 @@ p.field-description {
     font-weight: 700;
 }
 
+#log_in_form {
+    max-width: 25rem;
+}
+
+input.form-submit {
+    background-color: #ff9933;
+    border: 2px solid #ff9933;
+    color: #ffffff;
+}
+
+input.form-submit:hover {
+    background-color: #ffffff;
+    border: 2px solid #ff9933;
+    color: #ff9933;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .card-col {

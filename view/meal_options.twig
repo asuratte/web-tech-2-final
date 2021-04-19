@@ -9,14 +9,14 @@
             {% for meal_plan in meal_plans %}
                 <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
                     <div class="card">
-                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage }}" alt="Standard">
+                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
                         <div class="card-body">
-                            <h2 class="card-title">{{ meal_plan.planName }}</h2>
-                            <p class="card-text">{{ meal_plan.planDescription }}</p>
+                            <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
+                            <p class="card-text">{{ meal_plan.planDescription|e }}</p>
                             <ul class="card-list pl-0">
-                                <li class="mb-1"><span>Breakfast:</span> ${{ meal_plan.breakfastPrice }}/ea.</li>
-                                <li class="mb-1"><span>Lunch:</span> ${{ meal_plan.lunchPrice }}/ea.</li>
-                                <li class="mb-1"><span>Dinner:</span> ${{ meal_plan.dinnerPrice }}/ea.</li>
+                                <li class="mb-1"><span>Breakfast:</span> ${{ meal_plan.breakfastPrice|e }}/ea.</li>
+                                <li class="mb-1"><span>Lunch:</span> ${{ meal_plan.lunchPrice|e }}/ea.</li>
+                                <li class="mb-1"><span>Dinner:</span> ${{ meal_plan.dinnerPrice|e }}/ea.</li>
                             </ul>
                         </div>
                     </div>

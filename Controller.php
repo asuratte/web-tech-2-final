@@ -44,6 +44,9 @@ class Controller {
             case 'Show Meal Options':
                 $this->processShowMealOptionsPage();
                 break;
+            case 'Show Log In':
+                $this->processShowLogInPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -57,18 +60,23 @@ class Controller {
         $template = $this->twig->load('home.twig');
         echo $template->render();
     }
-    
+
     private function processShowFAQPage() {
         $template = $this->twig->load('faq.twig');
         echo $template->render();
     }
-    
+
     private function processShowMealOptionsPage() {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $template = $this->twig->load('meal_options.twig');
         echo $template->render(['meal_plans' => $meal_plans]);
     }
 
+    private function processShowLogInPage() {
+        $log_in_message = '';
+        $template = $this->twig->load('log_in.twig');
+        echo $template->render(['log_in_message' => $log_in_message]);
+    }
 
     /**
      * Gets the action from $_GET or $_POST array
