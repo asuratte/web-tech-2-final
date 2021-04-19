@@ -137,6 +137,10 @@ p.field-description {
     max-width: 25rem;
 }
 
+#sign_up_form, .sign-up-alert {
+    max-width: 33rem;
+}
+
 input.form-submit {
     background-color: #ff9933;
     border: 2px solid #ff9933;

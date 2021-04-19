@@ -3,6 +3,7 @@
 require_once './model/Database.php';
 require_once './model/Validator.php';
 require_once './model/MealPlansTable.php';
+require_once './model/StatesTable.php';
 require_once 'autoload.php';
 
 class Controller {
@@ -10,6 +11,7 @@ class Controller {
     private $action;
     private $db;
     private $meal_plans_table;
+    private $states_table;
     private $twig;
 
     /**
@@ -22,6 +24,7 @@ class Controller {
         $this->connectToDatabase();
         if ($this->db->isConnected()) {
             $this->meal_plans_table = new MealPlansTable($this->db);
+            $this->states_table = new StatesTable($this->db);
         } else {
             $error_message = $this->db->getErrorMessage();
             $template = $this->twig->load('database_error.twig');
@@ -53,6 +56,9 @@ class Controller {
             case 'Log Out':
                 $this->processLogOut();
                 break;
+            case 'Show Sign Up':
+                $this->processShowSignUpPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -82,9 +88,9 @@ class Controller {
         $log_in_error_message = '';
         $log_in_success_message = '';
         $template = $this->twig->load('log_in.twig');
-        echo $template->render(['log_in_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+        echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
     }
-    
+
     private function processLogIn() {
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
@@ -102,14 +108,23 @@ class Controller {
             echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
         }
     }
-    
+
     private function processLogOut() {
         $_SESSION = array();
-        session_destroy(); 
+        session_destroy();
         $this->twig->addGlobal('session', $_SESSION);
         $log_in_success_message = 'You have been logged out.';
         $template = $this->twig->load('log_in.twig');
         echo $template->render(['log_in_success_message' => $log_in_success_message]);
+    }
+
+    private function processShowSignUpPage() {
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $states = $this->states_table->get_states();
+        $sign_up_error_message = '';
+        $sign_up_success_message = '';
+        $template = $this->twig->load('sign_up.twig');
+        echo $template->render(['sign_up_error_message' => $sign_up_error_message, 'sign_up_success_message' => $sign_up_success_message, 'meal_plans' => $meal_plans, 'states' => $states]);
     }
 
     /**
