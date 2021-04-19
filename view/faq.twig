@@ -1,1 +1,96 @@
-{# empty Twig template #}
+{{ include('/shared/header.twig') }}
+{{ include('/shared/navigation.twig') }}
+<div class="container py-4 text-center">
+    <main class="w-75 mx-auto">
+        <h1>Frequently Asked Questions</h1>
+        <p>Don't see your question below? Call us at <a href="tel:+19999999999">(999) 999-9999</a> or email us at <a
+                href="mailto:hello@madisonstreetmealprep.com">hello@madisonstreetmealprep.com</a> and we'll be happy
+            to help.</p>
+        <div id="accordion" class="mt-5">
+            <div class="card">
+                <div class="card-header bg-custom-light" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                            What kind of containers do you use?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        We deliver our meals in glass containers with BPA-free plastic locking lids. Your used
+                        containers can be picked up when your next order is delivered, or dropped off at our
+                        kitchen.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-custom-light" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                                aria-expanded="false" aria-controls="collapseTwo">
+                            How far in advance are the meals cooked?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        We prep meals the same day they are delivered to ensure optimal freshness.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-custom-light" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                                aria-expanded="false" aria-controls="collapseThree">
+                            What are the benefits of getting prepped meals?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        Madison Street Meal Prep can save you hours each week by doing all of the shopping,
+                        meal-planning, cooking, and portioning for you. Our healthy, vegetable-forward meals will
+                        help you to feel your best.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-custom-light" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour"
+                                aria-expanded="false" aria-controls="collapseFour">
+                            How much will this cost?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                        This varies based on the meal plan, number of people, and number of days you select. Please
+                        visit our
+                        <a href="pricing.html">visit our pricing page</a> for plan pricing information.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-custom-light" id="headingFive">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive"
+                                aria-expanded="false" aria-controls="collapseFive">
+                            What precautions are you taking around COVID-19?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                    <div class="card-body">
+                        We are following all federal and state guidelines including social distancing, hand washing,
+                        and mask wearing. We've also closed our kitchen to the public, and are offering contactless
+                        delivery and curbside pickup only.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{{ include('/shared/footer.twig') }}

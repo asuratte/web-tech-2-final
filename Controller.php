@@ -26,6 +26,12 @@ class Controller {
      */
     public function invoke() {
         switch ($this->action) {
+            case 'Show Home':
+                $this->processShowHomePage();
+                break;
+            case 'Show FAQ':
+                $this->processShowFAQPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -33,12 +39,18 @@ class Controller {
     }
 
     /**
-     * Processes request
+     * Process requests
      */
     private function processShowHomePage() {
         $template = $this->twig->load('home.twig');
         echo $template->render();
     }
+    
+    private function processShowFAQPage() {
+        $template = $this->twig->load('faq.twig');
+        echo $template->render();
+    }
+
 
     /**
      * Gets the action from $_GET or $_POST array
