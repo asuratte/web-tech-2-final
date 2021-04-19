@@ -133,7 +133,7 @@ p.field-description {
     font-weight: 700;
 }
 
-#log_in_form {
+#log_in_form, .log-in-alert {
     max-width: 25rem;
 }
 

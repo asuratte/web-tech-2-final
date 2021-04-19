@@ -47,6 +47,12 @@ class Controller {
             case 'Show Log In':
                 $this->processShowLogInPage();
                 break;
+            case 'Log in':
+                $this->processLogIn();
+                break;
+            case 'Log Out':
+                $this->processLogOut();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -73,9 +79,37 @@ class Controller {
     }
 
     private function processShowLogInPage() {
-        $log_in_message = '';
+        $log_in_error_message = '';
+        $log_in_success_message = '';
         $template = $this->twig->load('log_in.twig');
-        echo $template->render(['log_in_message' => $log_in_message]);
+        echo $template->render(['log_in_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+    }
+    
+    private function processLogIn() {
+        $username = filter_input(INPUT_POST, 'username');
+        $password = filter_input(INPUT_POST, 'password');
+        if ($this->db->isValidUserLogIn($username, $password)) {
+            $_SESSION['is_valid_user'] = true;
+            $_SESSION['username'] = $username;
+            $log_in_success_message = 'You are logged in as ' + $username + '.';
+            $log_in_error_message = '';
+            $template = $this->twig->load('log_in.twig');
+            echo $template->render(['username' => $username, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+        } else {
+            $log_in_error_message = 'Invalid username or password.';
+            $log_in_success_message = '';
+            $template = $this->twig->load('log_in.twig');
+            echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+        }
+    }
+    
+    private function processLogOut() {
+        $_SESSION = array();
+        session_destroy(); 
+        $this->twig->addGlobal('session', $_SESSION);
+        $log_in_success_message = 'You have been logged out.';
+        $template = $this->twig->load('log_in.twig');
+        echo $template->render(['log_in_success_message' => $log_in_success_message]);
     }
 
     /**

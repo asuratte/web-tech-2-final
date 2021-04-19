@@ -16,7 +16,11 @@
                 <input type="submit" name="action" value="Log in" class="btn btn-primary form-submit">
             </div>
         </form>
-        <p>{{ log_in_message|e }}</p>
+        {% if log_in_error_message is not empty %}
+            <p class="alert alert-danger log-in-alert mt-4 mx-auto">{{ log_in_error_message|e }}</p>  
+        {% elseif log_in_success_message is not empty %}
+            <p class="alert alert-success log-in-alert mt-4 mx-auto">{{ log_in_success_message|e }}</p>  
+        {% endif %}
     </main>
 </div>
 {{ include('/shared/footer.twig') }}

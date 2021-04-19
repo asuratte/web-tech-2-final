@@ -22,6 +22,28 @@ class Database {
     }
 
     /**
+     * Checks the login credentials
+     * 
+     * @param type $username
+     * @param type $password
+     * @return boolen - true if the specified password is valid for a given customer username
+     */
+    public function isValidUserLogIn($username, $password) {
+        $query = 'SELECT password FROM customers
+              WHERE username = :username';
+        $statement = $this->db->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        if (!$row) {
+            return false;
+        }
+        $hash = $row['password'];
+        return password_verify($password, $hash);
+    }
+
+    /**
      * Checks the connection to the database
      *
      * @return boolean - True if a connection has been established, false if not
