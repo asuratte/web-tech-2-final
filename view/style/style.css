@@ -113,10 +113,8 @@ label.form-required:after {
     color: #ff9933;
 }
 
-.form-error {
-    color: firebrick;
-    padding-top: 3px;
-    font-style: italic;
+.field-error {
+    border: 1px solid #dc3545;
 }
 
 p.field-description {

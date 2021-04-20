@@ -5,43 +5,67 @@
         <h1>Sign Up</h1>
         <form action="." method="post" id="sign_up_form" class="text-left mx-auto">
             <div class="form-group">
-                <label>First Name:</label>
-                <input type="text" class="form-control" name="firstName">
+                <label class="form-required">First Name:</label>
+                <input type="text" class="form-control {% if error_first_name is not empty %} {{ 'field-error' }} {% endif %}" name="firstName" value="{{ first_name|e }}">
+                {% if error_first_name is not empty %}
+                    <span class="text-danger d-inline-block pt-1 font-italic">{{ error_first_name|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label>Last Name:</label>
-                <input type="text" class="form-control" name="lastName">
+                <label class="form-required">Last Name:</label>
+                <input type="text" class="form-control {% if error_last_name is not empty %} {{ 'field-error' }} {% endif %}" name="lastName" value="{{ last_name|e }}">
+                {% if error_last_name is not empty %}
+                    <span class="text-danger d-inline-block pt-1 font-italic">{{ error_last_name|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label for="streetAddress">Address:</label>
-                <input type="text" class="form-control" id="streetAddress" placeholder="">
+                <label class="form-required" for="streetAddress">Street Address:</label>
+                <input type="text" class="form-control {% if error_street_address is not empty %} {{ 'field-error' }} {% endif %}" name="streetAddress" placeholder="" value="{{ street_address|e }}">
+                {% if error_street_address is not empty %}
+                    <span class="text-danger d-inline-block pt-1 font-italic">{{ error_street_address|e }}</span>
+                {% endif %}
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="city">City:</label>
-                    <input type="text" class="form-control" id="city">
+                    <label class="form-required" for="city">City:</label>
+                    <input type="text" class="form-control {% if error_city is not empty %} {{ 'field-error' }} {% endif %}" name="city" value="{{ city|e }}">
+                    {% if error_city is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_city|e }}</span>
+                    {% endif %}
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="state">State:</label>
-                    <select id="state" class="form-control">
+                    <label class="form-required" for="state">State:</label>
+                    <select name="state" class="form-control {% if error_state_field is not empty %} {{ 'field-error' }} {% endif %}">
                         <option value="" disabled selected>Choose...</option>
                         {% for state in states %}
-                            <option value="{{ state.abbreviation|e }}">{{ state.name|e }}</option>
+                            <option value="{{ state.abbreviation|e }}" {% if state.abbreviation == state_field %} {{ ' selected="selected"' }} {% endif %}>{{ state.name|e }}</option>
                         {% endfor %}
                     </select>
+                    {% if error_state_field is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_state_field|e }}</span>
+                    {% endif %}
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="zipCode">Zip:</label>
-                    <input type="text" class="form-control" id="zipCode">
+                    <label class="form-required" for="zipCode">Zip:</label>
+                    <input type="text" class="form-control {% if error_zip_code is not empty %} {{ 'field-error' }} {% endif %}" name="zipCode" value="{{ zip_code|e }}">
+                    {% if error_zip_code is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_zip_code|e }}</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="form-group">
-                <label>Email:</label>
-                <input type="email" class="form-control" name="email">
+                <label class="form-required">Email:</label>
+                <input type="text" class="form-control {% if error_email is not empty %} {{ 'field-error' }} {% endif %}" name="email" value="{{ email|e }}">
+                {% if error_email is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_email|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label>Phone:</label>
-                <input type="text" class="form-control" name="phoneNumber">
+                <label class="form-required">Phone:</label>
+                <input type="text" class="form-control {% if error_phone is not empty %} {{ 'field-error' }} {% endif %}" name="phoneNumber" placeholder="(999) 999-9999" value="{{ phone|e }}">
+                {% if error_phone is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_phone|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label for="dietaryPreference">Dietary Preference:</label>
@@ -53,12 +77,21 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Username:</label>
-                <input type="text" class="form-control" name="username">
+                <label class="form-required">Username:</label>
+                <input type="text" class="form-control {% if error_username is not empty %} {{ 'field-error' }} {% endif %}" name="username" value="{{ username|e }}">
+                {% if error_username is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_username|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label>Password:</label>
+                <label class="form-required">Password:</label>
                 <input type="password" class="form-control" name="password">
+                {{ error_password|e }}
+            </div>
+            <div class="form-group">
+                <label class="form-required">Confirm Password:</label>
+                <input type="password" class="form-control" name="confirmPassword">
+                {{ error_passwords_match|e }}
             </div>
             <div class="form-group">
                 <input type="submit" name="action" value="Sign up" class="btn btn-primary form-submit">

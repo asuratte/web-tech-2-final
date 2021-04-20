@@ -36,6 +36,21 @@ class CustomersTable {
             $statement->execute();
             $statement->closeCursor();
     }
+    
+    public function checkUsernameExists($username) {
+        $query = 'SELECT * FROM customers
+              WHERE username = :username';
+        $statement = $this->db->getDB()->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        if (!$row) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }
 
