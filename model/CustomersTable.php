@@ -15,28 +15,28 @@ class CustomersTable {
         $customers->execute();
         return $customers;
     }
-    
+
     function add_customer($first_name, $last_name,
-        $street_address, $city, $state, $zip_code, $phone, $email, 
+            $street_address, $city, $state, $zip_code, $phone, $email,
             $dietary_preference, $username, $password) {
-            $query = 'INSERT INTO customers
-              VALUES (:$first_name, :last_name, :street_address, :city, :state, :zip_code, :phone, :email, :dietary_preference, :username, :password)';
-            $statement = $this->db->getDB()->prepare($query);
-            $statement->bindValue(':firstName', $first_name);
-            $statement->bindValue(':lastName', $last_name);
-            $statement->bindValue(':streetAddress', $street_address);
-            $statement->bindValue(':city', $city);
-            $statement->bindValue(':state', $state);
-            $statement->bindValue(':zipCode', $zip_code);
-            $statement->bindValue(':phone', $phone);
-            $statement->bindValue(':email', $email);
-            $statement->bindValue(':dietaryPreference', $dietary_preference);
-            $statement->bindValue(':username', $username);
-            $statement->bindValue(':password', $password);
-            $statement->execute();
-            $statement->closeCursor();
+        $query = 'INSERT INTO customers (firstName, lastName, streetAddress, city, state, zipCode, phoneNumber, email, dietaryPreference, username, password)
+              VALUES (:firstName, :lastName, :streetAddress, :city, :state, :zipCode, :phoneNumber, :email, :dietaryPreference, :username, :password)';
+        $statement = $this->db->getDB()->prepare($query);
+        $statement->bindValue(':firstName', $first_name);
+        $statement->bindValue(':lastName', $last_name);
+        $statement->bindValue(':streetAddress', $street_address);
+        $statement->bindValue(':city', $city);
+        $statement->bindValue(':state', $state);
+        $statement->bindValue(':zipCode', $zip_code);
+        $statement->bindValue(':phoneNumber', $phone);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':dietaryPreference', $dietary_preference);
+        $statement->bindValue(':username', $username);
+        $statement->bindValue(':password', $password);
+        $statement->execute();
+        $statement->closeCursor();
     }
-    
+
     public function checkUsernameExists($username) {
         $query = 'SELECT * FROM customers
               WHERE username = :username';
