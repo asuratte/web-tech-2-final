@@ -3,6 +3,7 @@
 <div class="container py-4 text-center">
     <main class="w-75 mx-auto">
         <h1>Log In</h1>
+        {% if session.is_valid_user is not defined %}
         <form action="." method="post" id="log_in_form" class="text-left mx-auto">
             <div class="form-group">
                 <label>Username:</label>
@@ -16,6 +17,7 @@
                 <input type="submit" name="action" value="Log in" class="btn btn-primary form-submit">
             </div>
         </form>
+        {% endif %}
         {% if log_in_error_message is not empty %}
             <p class="alert alert-danger log-in-alert mt-4 mx-auto">{{ log_in_error_message|e }}</p>  
         {% elseif log_in_success_message is not empty %}

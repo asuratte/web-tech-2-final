@@ -97,17 +97,17 @@ class Controller {
         $template = $this->twig->load('log_in.twig');
         echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
     }
-
+    
     private function processLogIn() {
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
         if ($this->db->isValidUserLogIn($username, $password)) {
             $_SESSION['is_valid_user'] = true;
             $_SESSION['username'] = $username;
-            $log_in_success_message = 'You are logged in as ' + $username + '.';
+            $log_in_success_message = 'You are logged in as ' . $username . '.';
             $log_in_error_message = '';
             $template = $this->twig->load('log_in.twig');
-            echo $template->render(['username' => $username, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+            echo $template->render(['username' => $username, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);            
         } else {
             $log_in_error_message = 'Invalid username or password.';
             $log_in_success_message = '';
@@ -204,6 +204,8 @@ class Controller {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $sign_up_error_message = '';
         $sign_up_success_message = 'You have successfully created an account.';
+        $_SESSION['is_valid_user'] = true;
+        $_SESSION['username'] = $username;
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $customers_table = new CustomersTable($this->db);
         $customers_table->add_customer($first_name, $last_name,
