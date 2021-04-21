@@ -147,6 +147,10 @@ class Validator {
     }
 
     public function checkPasswordsMatch($confirm_password, $password) {
+        $error_message = $this->checkTextField($confirm_password, $required = true);
+        if (!empty($error_message)) {
+            return $error_message;
+        }
         if ($confirm_password === $password) {
             $error_message = '';
             return $error_message;

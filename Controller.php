@@ -183,7 +183,7 @@ class Controller {
                     $confirm_password, $error_confirm_password) {
         $states = $this->states_table->get_states();
         $meal_plans = $this->meal_plans_table->get_meal_plans();
-        $sign_up_error_message = 'There was a problem with your submission. Please resolve the issues listed above and try again.';
+        $sign_up_error_message = 'There was a problem with your submission. Please resolve any errors and try again.';
         $sign_up_success_message = '';
         $template = $this->twig->load('sign_up.twig');
         echo $template->render(['sign_up_error_message' => $sign_up_error_message, 'sign_up_success_message' => $sign_up_success_message,
