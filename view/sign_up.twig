@@ -85,13 +85,17 @@
             </div>
             <div class="form-group">
                 <label class="form-required">Password:</label>
-                <input type="password" class="form-control" name="password">
-                {{ error_password|e }}
+                <input type="password" class="form-control {% if error_password is not empty %} {{ 'field-error' }} {% endif %}" name="password" value="{{ password|e }}">
+                {% if error_password is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_password|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label class="form-required">Confirm Password:</label>
-                <input type="password" class="form-control" name="confirmPassword">
-                {{ error_passwords_match|e }}
+                <input type="password" class="form-control {% if error_confirm_password is not empty %} {{ 'field-error' }} {% endif %}" name="confirmPassword" value="{{ confirm_password|e }}">
+                {% if error_confirm_password is not empty %}
+                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_confirm_password|e }}</span>
+                {% endif %}
             </div>
             <div class="form-group">
                 <input type="submit" name="action" value="Sign up" class="btn btn-primary form-submit">

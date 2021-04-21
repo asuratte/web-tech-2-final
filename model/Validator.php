@@ -47,7 +47,7 @@ class Validator {
     }
 
     public function checkUsername($value, $required = true) {
-        $error_message = $this->checkTextField($value, $required, 9, 65);
+        $error_message = $this->checkTextField($value, $required, 9);
         if (!empty($error_message)) {
             return $error_message;
         } else if ($this->customers_table->checkUsernameExists($value) == true) {
@@ -130,6 +130,29 @@ class Validator {
 
         if (!empty($pattern_match_domain)) {
             return $pattern_match_domain;
+        }
+    }
+
+    public function checkPassword($value) {
+        $error_message = $this->checkTextField($value, $required = true);
+        if (!empty($error_message)) {
+            return $error_message;
+        }
+        $pattern = '/^(?=.*[[:digit:]])(?=.*[[:upper:]])(?=.*[[:lower:]])[[:print:]]{10,}?/';
+        $pattern_match_error_message = 'Password requires at least 10 characters including a number, a lowercase, and an uppercase letter.';
+        $pattern_match = $this->checkValidationPattern($value, $pattern, $pattern_match_error_message, $required = true);
+        if (!empty($pattern_match)) {
+            return $pattern_match;
+        }
+    }
+
+    public function checkPasswordsMatch($confirm_password, $password) {
+        if ($confirm_password === $password) {
+            $error_message = '';
+            return $error_message;
+        } else {
+            $error_message = "Passwords don't match.";
+            return $error_message;
         }
     }
 

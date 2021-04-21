@@ -159,24 +159,28 @@ class Controller {
         $error_email = $this->validator->checkEmail($email);
         $error_phone = $this->validator->checkPhone($phone);
         $error_username = $this->validator->checkUsername($username);
-        //$this->validator->checkPassword($password);
-        //$this->validator->checkPasswordsMatch($password, $confirm_password);
+        $error_password = $this->validator->checkPassword($password);
+        $error_confirm_password = $this->validator->checkPasswordsMatch($confirm_password, $password);
         // if validator comes back with errors
-        if (!empty($error_first_name) || !empty($error_last_name) || !empty($error_street_address) || !empty($error_city) || !empty($error_state_field) 
-                || !empty($error_zip_code) || !empty($error_username) || !empty($error_phone) || !empty($error_phone)) {
+        if (!empty($error_first_name) || !empty($error_last_name) || !empty($error_street_address) || !empty($error_city) || 
+                !empty($error_state_field) || !empty($error_zip_code) || !empty($error_username) || !empty($error_phone) || 
+                !empty($error_phone) || !empty($error_password) || !empty($error_confirm_password)) {
             $this->processShowSignUpErrors($first_name, $error_first_name,
                     $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
-                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email);
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password, 
+                    $confirm_password, $error_confirm_password);
         } else {
             $this->processAddCustomerToDatabase($first_name, $error_first_name,
-            $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
-            $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email);
+                    $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password, 
+                    $confirm_password, $error_confirm_password);
         }
     }
 
     private function processShowSignUpErrors($first_name, $error_first_name,
-            $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
-            $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email) {
+                    $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password, 
+                    $confirm_password, $error_confirm_password) {
         $states = $this->states_table->get_states();
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $sign_up_error_message = 'There was a problem with your submission. Please resolve the issues listed above and try again.';
@@ -187,13 +191,14 @@ class Controller {
             'last_name' => $last_name, 'error_last_name' => $error_last_name, 'street_address' => $street_address, 'error_street_address' => $error_street_address,
             'city' => $city, 'error_city' => $error_city, 'state_field' => $state_field, 'error_state_field' => $error_state_field,
             'zip_code' => $zip_code, 'error_zip_code' => $error_zip_code, 'username' => $username, 'error_username' => $error_username, 'phone' => $phone,
-                'error_phone' => $error_phone, 'email' => $email,
-                'error_email' => $error_email]);
+            'error_phone' => $error_phone, 'email' => $email,
+            'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password, 'error_confirm_password' => $error_confirm_password]);
     }
 
     private function processAddCustomerToDatabase($first_name, $error_first_name,
-            $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
-            $error_zip_code, $username, $error_username, $phone, $error_phone) {
+                    $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password, 
+                    $confirm_password, $error_confirm_password) {
         $states = $this->states_table->get_states();
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $sign_up_error_message = '';
@@ -203,14 +208,15 @@ class Controller {
           $customers_table->add_customer($first_name, $last_name,
           $street_address, $city, $state, $zip_code, $phone, $email,
           $dietary_preference, $username, $hash);
-        **/
+         * */
         $template = $this->twig->load('sign_up.twig');
         echo $template->render(['sign_up_error_message' => $sign_up_error_message, 'sign_up_success_message' => $sign_up_success_message,
             'meal_plans' => $meal_plans, 'states' => $states, 'first_name' => $first_name, 'error_first_name' => $error_first_name,
             'last_name' => $last_name, 'error_last_name' => $error_last_name, 'street_address' => $street_address, 'error_street_address' => $error_street_address,
             'city' => $city, 'error_city' => $error_city, 'state_field' => $state_field, 'error_state_field' => $error_state_field,
             'zip_code' => $zip_code, 'error_zip_code' => $error_zip_code, 'username' => $username, 'error_username' => $error_username, 'phone' => $phone,
-                'error_phone' => $error_phone]);
+            'error_phone' => $error_phone, 'email' => $email,
+            'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password, 'error_confirm_password' => $error_confirm_password]);
     }
 
     /**
