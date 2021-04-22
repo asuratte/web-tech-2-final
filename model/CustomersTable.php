@@ -15,6 +15,17 @@ class CustomersTable {
         $customers->execute();
         return $customers;
     }
+    
+    function get_customer_by_username($username) {
+        $query = 'SELECT * FROM customers
+              WHERE username = :username';
+        $statement = $this->db->getDB()->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $customer = $statement->fetch();
+        $statement->closeCursor();
+        return $customer;
+    }
 
     function add_customer($first_name, $last_name,
             $street_address, $city, $state, $zip_code, $phone, $email,

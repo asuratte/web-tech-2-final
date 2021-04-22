@@ -24,16 +24,10 @@ class Controller {
         $this->twig = new Twig\Environment($loader);
         $this->setSecureConnectionAndSession();
         $this->connectToDatabase();
-        if ($this->db->isConnected()) {
-            $this->meal_plans_table = new MealPlansTable($this->db);
-            $this->states_table = new StatesTable($this->db);
-            $this->customers_table = new CustomersTable($this->db);
-            $this->validator = new Validator($this->db, $this->customers_table);
-        } else {
-            $error_message = $this->db->getErrorMessage();
-            $template = $this->twig->load('database_error.twig');
-            exit();
-        }
+        $this->meal_plans_table = new MealPlansTable($this->db);
+        $this->states_table = new StatesTable($this->db);
+        $this->customers_table = new CustomersTable($this->db);
+        $this->validator = new Validator($this->db, $this->customers_table);
         $this->action = $this->getAction();
     }
 
@@ -97,17 +91,19 @@ class Controller {
         $template = $this->twig->load('log_in.twig');
         echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
     }
-    
+
     private function processLogIn() {
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
         if ($this->db->isValidUserLogIn($username, $password)) {
-            $_SESSION['is_valid_user'] = true;
-            $_SESSION['username'] = $username;
+            $customer = $this->customers_table->get_customer_by_username($username);
+            $first_name = $customer['firstName'];
+            $dietary_preference = $customer['dietaryPreference'];
+            $this->addToSessionGlobal($username, $first_name, $dietary_preference);
             $log_in_success_message = 'You are logged in as ' . $username . '.';
             $log_in_error_message = '';
             $template = $this->twig->load('log_in.twig');
-            echo $template->render(['username' => $username, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);            
+            echo $template->render(['username' => $username, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
         } else {
             $log_in_error_message = 'Invalid username or password.';
             $log_in_success_message = '';
@@ -145,7 +141,7 @@ class Controller {
         $zip_code = filter_input(INPUT_POST, 'zipCode', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $phone = filter_input(INPUT_POST, 'phoneNumber', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $dietary_preference = filter_input(INPUT_POST, 'dietaryPreference', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $dietary_preference = filter_input(INPUT_POST, 'dietaryPreference');
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $confirm_password = filter_input(INPUT_POST, 'confirmPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -204,8 +200,7 @@ class Controller {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $sign_up_error_message = '';
         $sign_up_success_message = 'You have successfully created an account.';
-        $_SESSION['is_valid_user'] = true;
-        $_SESSION['username'] = $username;
+        $this->addToSessionGlobal($username, $first_name, $dietary_preference);
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $customers_table = new CustomersTable($this->db);
         $customers_table->add_customer($first_name, $last_name,
@@ -251,6 +246,17 @@ class Controller {
             exit();
         }
         session_start();
+        $this->twig->addGlobal('session', $_SESSION);
+    }
+
+    /**
+     * Add session variables to twig upon login and signup
+     */
+    private function addToSessionGlobal($username, $first_name, $dietary_preference) {
+        $_SESSION['is_valid_user'] = true;
+        $_SESSION['username'] = $username;
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['dietary_preference'] = $dietary_preference;
         $this->twig->addGlobal('session', $_SESSION);
     }
 
