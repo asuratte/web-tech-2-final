@@ -67,6 +67,18 @@ class Validator {
             return $pattern_match;
         }
     }
+    
+    public function checkZipCode($value, $required, $min, $max) {
+        $error_message = $this->checkTextField($value, $required, $min, $max);
+        $pattern = '/^[0-9]{5}(?:-[0-9]{4})?$/';
+        $pattern_match_error_message = 'Use 99999 or 99999-9999 format';
+        $pattern_match = $this->checkValidationPattern($value, $pattern, $pattern_match_error_message, $required);
+        if (!empty($error_message)) {
+            return $error_message;
+        } else if (!empty($pattern_match)) {
+            return $pattern_match;
+        }
+    }
 
     public function checkEmail($value, $required = true) {
         $error_message = $this->checkTextField($value, $required, 1, 320);

@@ -151,7 +151,7 @@ class Controller {
         $error_street_address = $this->validator->checkTextField($street_address);
         $error_city = $this->validator->checkTextField($city);
         $error_state_field = $this->validator->checkTextField($state_field);
-        $error_zip_code = $this->validator->checkTextField($zip_code, true, 1, 21);
+        $error_zip_code = $this->validator->checkZipCode($zip_code, true, 1, 21);
         $error_email = $this->validator->checkEmail($email);
         $error_phone = $this->validator->checkPhone($phone);
         $error_username = $this->validator->checkUsername($username);
