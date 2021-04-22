@@ -60,6 +60,12 @@ class Controller {
             case 'Sign up':
                 $this->processSignUp();
                 break;
+            case 'Show My Account':
+                $this->processShowMyAccountPage();
+                break;
+            case 'Show Order History':
+                $this->processShowOrderHistoryPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -90,6 +96,16 @@ class Controller {
         $log_in_success_message = '';
         $template = $this->twig->load('log_in.twig');
         echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+    }
+    
+    private function processShowMyAccountPage() {
+        $template = $this->twig->load('my_account.twig');
+        echo $template->render();
+    }
+    
+    private function processShowOrderHistoryPage() {
+        $template = $this->twig->load('order_history.twig');
+        echo $template->render();
     }
 
     private function processLogIn() {
