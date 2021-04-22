@@ -28,8 +28,15 @@
                             <a class="nav-link" href=".?action=Show Sign Up">Sign Up</a>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href=".?action=Log Out">Log Out</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user pr-2 my-account-icon"></i>{{ session.first_name|e }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href=".?action=Order History">Order History</a>
+                                <a class="dropdown-item" href=".?action=My Account">My Account</a>
+                                <a class="dropdown-item" href=".?action=Log Out">Log Out</a>
+                            </div>
                         </li>
                     {% endif %}
                 </ul>

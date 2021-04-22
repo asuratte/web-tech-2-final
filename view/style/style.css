@@ -36,6 +36,14 @@ body {
     background-color: #f8f8f6;
 }
 
+a.dropdown-item, a:visited.dropdown-item {
+    color: #212529;
+}
+
+a.dropdown-item, a:hover.dropdown-item {
+    font-weight: normal;
+}
+
 a,
 a:visited {
     color: #ff9933;
@@ -150,6 +158,10 @@ input.form-submit:hover {
     border: 2px solid #ff9933;
     color: #ff9933;
 }
+
+i.my-account-icon {
+    color: #ff9933;
+} 
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
