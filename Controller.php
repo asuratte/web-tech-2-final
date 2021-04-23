@@ -5,6 +5,8 @@ require_once './model/Validator.php';
 require_once './model/MealPlansTable.php';
 require_once './model/StatesTable.php';
 require_once './model/CustomersTable.php';
+require_once './model/AddOnsTable.php';
+require_once './model/ZipCodesTable.php';
 require_once 'autoload.php';
 
 class Controller {
@@ -14,6 +16,8 @@ class Controller {
     private $meal_plans_table;
     private $states_table;
     private $customers_table;
+    private $add_ons_table;
+    private $zip_codes_table;
     private $twig;
 
     /**
@@ -25,6 +29,8 @@ class Controller {
         $this->setSecureConnectionAndSession();
         $this->connectToDatabase();
         $this->meal_plans_table = new MealPlansTable($this->db);
+        $this->add_ons_table = new AddOnsTable($this->db);
+        $this->zip_codes_table = new ZipCodesTable($this->db);
         $this->states_table = new StatesTable($this->db);
         $this->customers_table = new CustomersTable($this->db);
         $this->validator = new Validator($this->db, $this->customers_table);
@@ -113,8 +119,10 @@ class Controller {
     
     private function processShowOrderNowPage() {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $add_ons = $this->add_ons_table->get_add_ons();
+        $zip_codes = $this->zip_codes_table->get_zip_codes();
         $template = $this->twig->load('order_now.twig');
-        echo $template->render(['meal_plans' => $meal_plans]);
+        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes]);
     }
 
     private function processLogIn() {

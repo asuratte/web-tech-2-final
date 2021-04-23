@@ -6,31 +6,65 @@
         {% if session.is_valid_user is not defined %}
             <p class="alert alert-warning log-in-alert mt-4 mx-auto">You must be logged in to order. <a href=".?action=Show Log In">Log in now</a> or <a href=".?action=Show Sign Up">sign up for an account</a></p>
         {% else %}
-            <h2 class="d-inline-block mt-3">Meal Selection</h2>
             <form action="." method="post" id="order_form" class="text-left mx-auto">
+                <h2 class="d-inline-block mt-3">Meal Selection</h2>
                 <div class="meal-card-container row card-deck mt-3">
                     {% for meal_plan in meal_plans %}
                         <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
                             <div class="card">
-                                <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
-                                <div class="card-body">
+                                <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}">
+                                <div class="card-body text-center">
                                     <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ meal_plan.breakfastPrice }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ meal_plan.lunchPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ meal_plan.dinnerPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
+                </div>
+                <h2 class="d-inline-block mt-3">Add-On Selection</h2>
+                <div class="meal-card-container row card-deck mt-3">
+                    {% for add_on in add_ons %}
+                        <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                            <div class="card">
+                                <img class="card-img-top" src="./view/images/{{ add_on.addOnImage|e }}" alt="Standard">
+                                <div class="card-body text-center">
+                                    <h2 class="card-title px-2">{{ add_on.addOnName|e }}</h2>
+                                    <div class="form-group">
+                                        <div class="col"><span class="font-italic">${{ add_on.addOnPrice|e }}/ea.</span></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on.addOnId|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h2 class="d-inline-block mt-3">Pickup or Delivery</h2>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery1" value="pickup" checked>
+                        <label class="form-check-label" for="pickupOrDelivery1">
+                            Pickup <span class="font-italic">(free)</span>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery2" value="delivery">
+                        <label class="form-check-label" for="pickupOrDelivery2">
+                            Delivery <span class="font-italic">($5)</span>
+                            <p class="small">Delivery is only available to the following zip codes: {% for zip_code in zip_codes %} {{ zip_code.zipCode|e }}{% endfor %}. Order will be delivered to the address in your profile.</p>
+                        </label>
+
+                    </div>
                 </div>
                 <div class="form-group row">
                     <div class="col text-center"><input type="submit" name="action" value="Calculate total" class="btn btn-secondary form-submit"></div>
