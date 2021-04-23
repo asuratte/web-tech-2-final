@@ -96,8 +96,9 @@ class Controller {
 
     private function processShowMealOptionsPage() {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $add_ons = $this->add_ons_table->get_add_ons();
         $template = $this->twig->load('meal_options.twig');
-        echo $template->render(['meal_plans' => $meal_plans]);
+        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons]);
     }
 
     private function processShowLogInPage() {
@@ -106,17 +107,17 @@ class Controller {
         $template = $this->twig->load('log_in.twig');
         echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
     }
-    
+
     private function processShowMyAccountPage() {
         $template = $this->twig->load('my_account.twig');
         echo $template->render();
     }
-    
+
     private function processShowOrderHistoryPage() {
         $template = $this->twig->load('order_history.twig');
         echo $template->render();
     }
-    
+
     private function processShowOrderNowPage() {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $add_ons = $this->add_ons_table->get_add_ons();

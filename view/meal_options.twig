@@ -3,8 +3,8 @@
 <div class="container py-4 text-center">
     <main class="mx-auto px-5">
         <h1>Meal Options</h1>
-        <p class="w-75 mx-auto">We have a wide variety of meal plans suited for different dietary preferences. Learn
-            more below and <a href="pricing.html">visit our pricing page</a> for plan pricing information.</p>
+        <p class="w-75 mx-auto">We have a wide variety of meal plans suited for different dietary preferences.</p>
+        <p class="w-75 mx-auto">Ready to get started? <a href=".?action=Show Order Now">Order Now</a></p>
         <div class="meal-card-container row card-deck mt-5">
             {% for meal_plan in meal_plans %}
                 <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
@@ -18,6 +18,21 @@
                                 <li class="mb-1"><span>Lunch:</span> ${{ meal_plan.lunchPrice|e }}/ea.</li>
                                 <li class="mb-1"><span>Dinner:</span> ${{ meal_plan.dinnerPrice|e }}/ea.</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <h1>Add-On Options</h1>
+        <div class="meal-card-container row card-deck mt-3">
+            {% for add_on in add_ons %}
+                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                    <div class="card">
+                        <img class="card-img-top" src="./view/images/{{ add_on.addOnImage|e }}" alt="Standard">
+                        <div class="card-body text-center">
+                            <h2 class="card-title px-2">{{ add_on.addOnName|e }}</h2>
+                            <p class="card-text">{{ add_on.addOnDescription|e }}</p>
+                            <div class="col">${{ add_on.addOnPrice|e }}/ea.</div>
                         </div>
                     </div>
                 </div>
