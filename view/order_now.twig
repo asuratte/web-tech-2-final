@@ -6,31 +6,37 @@
         {% if session.is_valid_user is not defined %}
             <p class="alert alert-warning log-in-alert mt-4 mx-auto">You must be logged in to order. <a href=".?action=Show Log In">Log in now</a> or <a href=".?action=Show Sign Up">sign up for an account</a></p>
         {% else %}
-        <h2 class="d-inline-block mt-3">Meal Selection</h2>
-        <div class="meal-card-container row card-deck mt-3">
-            {% for meal_plan in meal_plans %}
-                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
-                    <div class="card">
-                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
-                            <div class="form-group">
-                                <div class="col"><span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ meal_plan.breakfastPrice }}/ea.</span></div>
-                                <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ meal_plan.lunchPrice|e }}/ea.</span></div>
-                                <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ meal_plan.dinnerPrice|e }}/ea.</span></div>
-                                <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+            <h2 class="d-inline-block mt-3">Meal Selection</h2>
+            <form action="." method="post" id="order_form" class="text-left mx-auto">
+                <div class="meal-card-container row card-deck mt-3">
+                    {% for meal_plan in meal_plans %}
+                        <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                            <div class="card">
+                                <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
+                                <div class="card-body">
+                                    <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
+                                    <div class="form-group">
+                                        <div class="col"><span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ meal_plan.breakfastPrice }}/ea.</span></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ meal_plan.lunchPrice|e }}/ea.</span></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ meal_plan.dinnerPrice|e }}/ea.</span></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
+                <div class="form-group row">
+                    <div class="col text-center"><input type="submit" name="action" value="Calculate total" class="btn btn-secondary form-submit"></div>
+                    <div class="col text-center"><input type="submit" name="action" value="Submit order" class="btn btn-primary form-submit"></div>
+                </div>
+            </form>
         {% endif %}
     </main>
 </div>

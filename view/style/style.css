@@ -116,6 +116,8 @@ form button.btn.btn-primary:hover {
     border-color: #ff9933;
 }
 
+
+
 .form-group>label {
     font-weight: 700;
 }
@@ -152,16 +154,28 @@ p.field-description {
     max-width: 33rem;
 }
 
-input.form-submit {
+input.form-submit.btn-primary {
     background-color: #ff9933;
     border: 2px solid #ff9933;
     color: #ffffff;
 }
 
-input.form-submit:hover {
+input.form-submit.btn-secondary {
+    background-color: #a8a6a6;
+    border: 2px solid #a8a6a6;
+    color: #ffffff;
+}
+
+input.form-submit.btn-primary:hover {
     background-color: #ffffff;
     border: 2px solid #ff9933;
     color: #ff9933;
+}
+
+input.form-submit.btn-secondary:hover {
+    background-color: #ffffff;
+    border: 2px solid #a8a6a6;
+    color: #a8a6a6;
 }
 
 i.my-account-icon {
