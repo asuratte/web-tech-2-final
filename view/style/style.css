@@ -93,6 +93,11 @@ section.home-get-started .image-wrap {
     font-weight: bold;
 }
 
+.form-control.order-quantity {
+    width: 4rem;
+    height: 2rem;
+}
+
 div#accordion .card button {
     color: #343a40;
     font-weight: 600;

@@ -66,6 +66,9 @@ class Controller {
             case 'Show Order History':
                 $this->processShowOrderHistoryPage();
                 break;
+            case 'Show Order Now':
+                $this->processShowOrderNowPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -106,6 +109,12 @@ class Controller {
     private function processShowOrderHistoryPage() {
         $template = $this->twig->load('order_history.twig');
         echo $template->render();
+    }
+    
+    private function processShowOrderNowPage() {
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $template = $this->twig->load('order_now.twig');
+        echo $template->render(['meal_plans' => $meal_plans]);
     }
 
     private function processLogIn() {
