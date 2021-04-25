@@ -17,15 +17,15 @@
                                     <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ meal_plan.breakfastPrice }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-breakfast-quantity"></div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ meal_plan.lunchPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-lunch-quantity"></div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ meal_plan.dinnerPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planId|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-dinner-quantity"></div>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                                     <h2 class="card-title px-2">{{ add_on.addOnName|e }}</h2>
                                     <div class="form-group">
                                         <div class="col"><span class="font-italic">${{ add_on.addOnPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on.addOnId|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text"></div>
+                                        <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on.addOnID|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="add-on-{{ add_on.addOnID|e }}-quantity"></div>
                                     </div>
                                 </div>
                             </div>
@@ -71,6 +71,37 @@
                     <div class="col text-center"><input type="submit" name="action" value="Submit order" class="btn btn-primary form-submit"></div>
                 </div>
             </form>
+            {% if show_total_table == true %}
+                <div class="order-total text-left mt-5">
+                    <table class="table table-bordered table-sm mb-4">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="label" colspan="2">Order Summary</th>
+                            </tr>
+                        </thead>
+                        {% for line_item in line_items %}
+                            {% if line_item[2] > 0 %}
+                                <tr>
+                                    <td class="label">{{ line_item[0]}} <span class="color-highlight">x</span> {{ line_item[1] }}</td>
+                                    <td class="result">${{ line_item[2]|number_format(2) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        <tr>
+                            <td class="label">Subtotal</td>
+                            <td class="result">${{ subtotal|number_format(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Taxes</td>
+                            <td class="result">${{ tax|number_format(2) }}</td>
+                        </tr>
+                        <tr class="total bg-custom-light">
+                            <td class="label font-weight-bold">Total: </td>
+                            <td class="result font-weight-bold">${{ total|number_format(2) }}</td>
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
         {% endif %}
     </main>
 </div>

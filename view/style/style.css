@@ -138,11 +138,11 @@ p.field-description {
     margin-bottom: .5rem;
 }
 
-.price-calculated td.label:not(.total-label) {
+.order-total td.label:not(.total-label) {
     font-weight: 500;
 }
 
-.price-calculated tr.total {
+.order-total tr.total {
     font-weight: 700;
 }
 
@@ -182,6 +182,10 @@ i.my-account-icon {
     color: #ff9933;
 } 
 
+span.color-highlight {
+    color: #ff9933;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .card-col {
@@ -203,7 +207,7 @@ i.my-account-icon {
         font-size: 2.5rem;
     }
 
-    .price-calculated table {
+    .order-total table {
         max-width: 80%;
     }
 }
@@ -214,7 +218,7 @@ i.my-account-icon {
         text-align: right;
     }
 
-    .price-calculated table {
-        max-width: 50%;
+    .order-total table {
+        max-width: 100%;
     }
 }

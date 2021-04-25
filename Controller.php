@@ -78,6 +78,9 @@ class Controller {
             case 'Show Order Now':
                 $this->processShowOrderNowPage();
                 break;
+            case 'Calculate total':
+                $this->processCalculateOrderTotal();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -125,8 +128,9 @@ class Controller {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $add_ons = $this->add_ons_table->get_add_ons();
         $zip_codes = $this->zip_codes_table->get_zip_codes();
+        $show_total_table = false;
         $template = $this->twig->load('order_now.twig');
-        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes]);
+        echo $template->render(['Ïmeal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'show_total_table' => $show_total_table]);
     }
 
     private function processLogIn() {
@@ -136,7 +140,8 @@ class Controller {
             $customer = $this->customers_table->get_customer_by_username($username);
             $first_name = $customer['firstName'];
             $dietary_preference = $customer['dietaryPreference'];
-            $this->addToSessionGlobal($username, $first_name, $dietary_preference);
+            $customer_id = $customer['customerID'];
+            $this->addToSessionGlobal($username, $first_name, $dietary_preference, $customer_id);
             $log_in_success_message = 'You are logged in as ' . $username . '.';
             $log_in_error_message = '';
             $template = $this->twig->load('log_in.twig');
@@ -237,12 +242,14 @@ class Controller {
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $sign_up_error_message = '';
         $sign_up_success_message = 'You have successfully created an account.';
-        $this->addToSessionGlobal($username, $first_name, $dietary_preference);
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $customers_table = new CustomersTable($this->db);
         $customers_table->add_customer($first_name, $last_name,
                 $street_address, $city, $state_field, $zip_code, $phone, $email,
                 $dietary_preference, $username, $hash);
+        $customer = $this->customers_table->get_customer_by_username($username);
+        $customer_id = $customer['customerID'];
+        $this->addToSessionGlobal($username, $first_name, $dietary_preference, $customer_id);
         $template = $this->twig->load('sign_up.twig');
         echo $template->render(['sign_up_error_message' => $sign_up_error_message, 'sign_up_success_message' => $sign_up_success_message,
             'meal_plans' => $meal_plans, 'states' => $states, 'first_name' => $first_name, 'error_first_name' => $error_first_name,
@@ -252,6 +259,87 @@ class Controller {
             'error_phone' => $error_phone, 'email' => $email,
             'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password,
             'error_confirm_password' => $error_confirm_password, 'dietary_preference' => $dietary_preference]);
+    }
+    
+    function processCalculateOrderTotal() {
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $add_ons = $this->add_ons_table->get_add_ons();
+        $zip_codes = $this->zip_codes_table->get_zip_codes();
+        $standard_breakfast_quantity = filter_input(INPUT_POST, 'meal-1-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $standard_lunch_quantity = filter_input(INPUT_POST, 'meal-1-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $standard_dinner_quantity = filter_input(INPUT_POST, 'meal-1-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $gluten_free_breakfast_quantity = filter_input(INPUT_POST, 'meal-2-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $gluten_free_lunch_quantity = filter_input(INPUT_POST, 'meal-2-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $gluten_free_dinner_quantity = filter_input(INPUT_POST, 'meal-2-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegetarian_breakfast_quantity = filter_input(INPUT_POST, 'meal-3-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegetarian_lunch_quantity = filter_input(INPUT_POST, 'meal-3-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegetarian_dinner_quantity = filter_input(INPUT_POST, 'meal-3-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegan_breakfast_quantity = filter_input(INPUT_POST, 'meal-4-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegan_lunch_quantity = filter_input(INPUT_POST, 'meal-4-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vegan_dinner_quantity = filter_input(INPUT_POST, 'meal-4-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $keto_breakfast_quantity = filter_input(INPUT_POST, 'meal-5-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $keto_lunch_quantity = filter_input(INPUT_POST, 'meal-5-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $keto_dinner_quantity = filter_input(INPUT_POST, 'meal-5-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $diabetic_breakfast_quantity = filter_input(INPUT_POST, 'meal-6-breakfast-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $diabetic_lunch_quantity = filter_input(INPUT_POST, 'meal-6-lunch-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $diabetic_dinner_quantity = filter_input(INPUT_POST, 'meal-6-dinner-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        // TODO add validation for all quantity fields to make sure it's empty or a number between 1 and 20
+        $standard_breakfast_subtotal = $this->getMealSubtotal('1', 'breakfast', $standard_breakfast_quantity);
+        $standard_lunch_subtotal = $this->getMealSubtotal('1', 'lunch', $standard_lunch_quantity);
+        $standard_dinner_subtotal = $this->getMealSubtotal('1', 'dinner', $standard_dinner_quantity);
+        $gluten_free_breakfast_subtotal = $this->getMealSubtotal('2', 'breakfast', $gluten_free_breakfast_quantity);
+        $gluten_free_lunch_subtotal = $this->getMealSubtotal('2', 'lunch', $gluten_free_lunch_quantity);
+        $gluten_free_dinner_subtotal = $this->getMealSubtotal('2', 'dinner', $gluten_free_dinner_quantity);
+        $vegetarian_breakfast_subtotal = $this->getMealSubtotal('3', 'breakfast', $vegetarian_breakfast_quantity);
+        $vegetarian_lunch_subtotal = $this->getMealSubtotal('3', 'lunch', $vegetarian_lunch_quantity);
+        $vegetarian_dinner_subtotal = $this->getMealSubtotal('3', 'dinner', $vegetarian_dinner_quantity);
+        $vegan_breakfast_subtotal = $this->getMealSubtotal('4', 'breakfast', $vegan_breakfast_quantity);
+        $vegan_lunch_subtotal = $this->getMealSubtotal('4', 'lunch', $vegan_lunch_quantity);
+        $vegan_dinner_subtotal = $this->getMealSubtotal('4', 'dinner', $vegan_dinner_quantity);
+        $keto_breakfast_subtotal = $this->getMealSubtotal('5', 'breakfast', $keto_breakfast_quantity);
+        $keto_lunch_subtotal = $this->getMealSubtotal('5', 'lunch', $keto_lunch_quantity);
+        $keto_dinner_subtotal = $this->getMealSubtotal('5', 'dinner', $keto_dinner_quantity);
+        $diabetic_breakfast_subtotal = $this->getMealSubtotal('6', 'breakfast', $diabetic_breakfast_quantity);
+        $diabetic_lunch_subtotal = $this->getMealSubtotal('6', 'lunch', $diabetic_lunch_quantity);
+        $diabetic_dinner_subtotal = $this->getMealSubtotal('6', 'dinner', $diabetic_dinner_quantity);
+        $line_items = array (
+            array("Standard Breakfast", $standard_breakfast_quantity, $standard_breakfast_subtotal),
+            array("Standard Lunch", $standard_lunch_quantity, $standard_lunch_subtotal),
+            array("Standard Dinner", $standard_dinner_quantity, $standard_dinner_subtotal),
+            array("Gluten Free Breakfast", $gluten_free_breakfast_quantity, $gluten_free_breakfast_subtotal),
+            array("Gluten Free Lunch", $gluten_free_lunch_quantity, $gluten_free_lunch_subtotal),
+            array("Gluten Free Dinner", $gluten_free_dinner_quantity, $gluten_free_dinner_subtotal),
+            array("Vegetarian Breakfast", $vegetarian_breakfast_quantity, $vegetarian_breakfast_subtotal),
+            array("Vegetarian Lunch", $vegetarian_lunch_quantity, $vegetarian_lunch_subtotal),
+            array("Vegetarian Dinner", $vegetarian_dinner_quantity, $vegetarian_dinner_subtotal),
+            array("Vegan Breakfast", $vegan_breakfast_quantity, $vegan_breakfast_subtotal),
+            array("Vegan Lunch", $vegan_lunch_quantity, $vegan_lunch_subtotal),
+            array("Vegan Dinner", $vegan_dinner_quantity, $vegan_dinner_subtotal),
+            array("Keto Breakfast", $keto_breakfast_quantity, $keto_breakfast_subtotal),
+            array("Keto Lunch", $keto_lunch_quantity, $keto_lunch_subtotal),
+            array("Keto Dinner", $keto_dinner_quantity, $keto_dinner_subtotal),
+            array("Diabetic Breakfast", $diabetic_breakfast_quantity, $diabetic_breakfast_subtotal),
+            array("Diabetic Lunch", $diabetic_lunch_quantity, $diabetic_lunch_subtotal),
+            array("Diabetic Dinner", $diabetic_dinner_quantity, $diabetic_dinner_subtotal)
+          );
+        $subtotal = $standard_breakfast_subtotal + $standard_lunch_subtotal + $standard_dinner_subtotal + $vegetarian_breakfast_subtotal + $vegetarian_lunch_subtotal + $vegetarian_dinner_subtotal + $vegan_breakfast_subtotal + $vegan_lunch_subtotal + $vegan_dinner_subtotal + $gluten_free_breakfast_subtotal + $gluten_free_lunch_subtotal + $gluten_free_dinner_subtotal + $keto_breakfast_subtotal + $keto_lunch_subtotal + $keto_dinner_subtotal + $diabetic_breakfast_subtotal + $diabetic_lunch_subtotal + $diabetic_dinner_subtotal;
+        $tax = $this->calculateTax($subtotal);
+        $total = $subtotal + $tax;
+        $show_total_table = true;
+        $template = $this->twig->load('order_now.twig');
+        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'subtotal' => $subtotal, 'line_items' => $line_items, 'tax' => $tax, 'total' => $total, 'show_total_table' => $show_total_table]);
+    }
+    
+    function getMealSubtotal($plan_id, $meal, $quantity) {
+        $meal_plan = $this->meal_plans_table->get_meal_plan($plan_id);
+        $subtotal = doubleval($meal_plan[$meal . 'Price']) * doubleval($quantity);
+        return $subtotal;
+    }
+    
+    function calculateTax($subtotal) {
+        $TAX_RATE = 0.0625;
+        $tax = $subtotal * $TAX_RATE;
+        return $tax;
     }
 
     /**
@@ -289,11 +377,12 @@ class Controller {
     /**
      * Add session variables to twig upon login and signup
      */
-    private function addToSessionGlobal($username, $first_name, $dietary_preference) {
+    private function addToSessionGlobal($username, $first_name, $dietary_preference, $customer_id) {
         $_SESSION['is_valid_user'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['first_name'] = $first_name;
         $_SESSION['dietary_preference'] = $dietary_preference;
+        $_SESSION['customer_id'] = $customer_id;
         $this->twig->addGlobal('session', $_SESSION);
     }
 

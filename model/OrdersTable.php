@@ -8,11 +8,13 @@ class OrdersTable {
         $this->db = $db;
     }
 
-    function get_orders() {
+    function get_orders($customer_id) {
         $query = 'SELECT * FROM orders
-                  ORDER BY orderID';
-        $orders = $this->db->getDB()->prepare($query);
-        $orders->execute();
+                  WHERE customer_id = :customerID';
+        $statement = $this->db->getDB()->prepare($query);
+        $statement->bindValue(':customerID', $customer_id);
+        $statement->execute();
+        $orders = $statement->fetch();
         return $orders;
     }
 
