@@ -67,7 +67,7 @@ class Validator {
             return $pattern_match;
         }
     }
-    
+
     public function checkZipCode($value, $required, $min, $max) {
         $error_message = $this->checkTextField($value, $required, $min, $max);
         $pattern = '/^[0-9]{5}(?:-[0-9]{4})?$/';
@@ -153,6 +153,19 @@ class Validator {
         $pattern = '/^(?=.*[[:digit:]])(?=.*[[:upper:]])(?=.*[[:lower:]])[[:print:]]{10,}?/';
         $pattern_match_error_message = 'Password requires at least 10 characters including a number, a lowercase, and an uppercase letter.';
         $pattern_match = $this->checkValidationPattern($value, $pattern, $pattern_match_error_message, $required = true);
+        if (!empty($pattern_match)) {
+            return $pattern_match;
+        }
+    }
+
+    public function checkQuantityField($value) {
+        $error_message = $this->checkTextField($value, $required = false);
+        if (!empty($error_message)) {
+            return $error_message;
+        }
+        $pattern = '/^([0-1]?[0-9]|20)$/';
+        $pattern_match_error_message = 'Quantity must be between 0-20.';
+        $pattern_match = $this->checkValidationPattern($value, $pattern, $pattern_match_error_message, $required = false);
         if (!empty($pattern_match)) {
             return $pattern_match;
         }
