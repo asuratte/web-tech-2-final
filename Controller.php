@@ -125,6 +125,7 @@ class Controller {
     }
 
     private function processShowOrderNowPage() {
+        $order_error_message = '';
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $add_ons = $this->add_ons_table->get_add_ons();
         $zip_codes = $this->zip_codes_table->get_zip_codes();
@@ -148,7 +149,7 @@ class Controller {
         $diabetic_dinner_quantity = 0;
         $show_total_table = false;
         $template = $this->twig->load('order_now.twig');
-        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'show_total_table' => $show_total_table, 'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity, 
+        echo $template->render(['order_error_message' => $order_error_message, 'meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'show_total_table' => $show_total_table, 'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity,
             'gluten_free_breakfast_quantity' => $gluten_free_breakfast_quantity, 'gluten_free_lunch_quantity' => $gluten_free_lunch_quantity, 'gluten_free_dinner_quantity' => $gluten_free_dinner_quantity,
             'vegetarian_breakfast_quantity' => $vegetarian_breakfast_quantity, 'vegetarian_lunch_quantity' => $vegetarian_lunch_quantity, 'vegetarian_dinner_quantity' => $vegetarian_dinner_quantity,
             'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
@@ -283,8 +284,9 @@ class Controller {
             'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password,
             'error_confirm_password' => $error_confirm_password, 'dietary_preference' => $dietary_preference]);
     }
-    
+
     function processCalculateOrderTotal() {
+        $order_error_message = '';
         $meal_plans = $this->meal_plans_table->get_meal_plans();
         $add_ons = $this->add_ons_table->get_add_ons();
         $zip_codes = $this->zip_codes_table->get_zip_codes();
@@ -310,82 +312,96 @@ class Controller {
         $add_on_fruit_quantity = filter_input(INPUT_POST, 'add-on-2-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $add_on_hummus_quantity = filter_input(INPUT_POST, 'add-on-3-quantity', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $pickup_or_delivery = filter_input(INPUT_POST, 'pickupOrDelivery', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        // TODO add validation for all quantity fields to make sure it's empty or a number between 1 and 20
-        $standard_breakfast_subtotal = $this->getMealSubtotal('1', 'breakfast', $standard_breakfast_quantity);
-        $standard_lunch_subtotal = $this->getMealSubtotal('1', 'lunch', $standard_lunch_quantity);
-        $standard_dinner_subtotal = $this->getMealSubtotal('1', 'dinner', $standard_dinner_quantity);
-        $gluten_free_breakfast_subtotal = $this->getMealSubtotal('2', 'breakfast', $gluten_free_breakfast_quantity);
-        $gluten_free_lunch_subtotal = $this->getMealSubtotal('2', 'lunch', $gluten_free_lunch_quantity);
-        $gluten_free_dinner_subtotal = $this->getMealSubtotal('2', 'dinner', $gluten_free_dinner_quantity);
-        $vegetarian_breakfast_subtotal = $this->getMealSubtotal('3', 'breakfast', $vegetarian_breakfast_quantity);
-        $vegetarian_lunch_subtotal = $this->getMealSubtotal('3', 'lunch', $vegetarian_lunch_quantity);
-        $vegetarian_dinner_subtotal = $this->getMealSubtotal('3', 'dinner', $vegetarian_dinner_quantity);
-        $vegan_breakfast_subtotal = $this->getMealSubtotal('4', 'breakfast', $vegan_breakfast_quantity);
-        $vegan_lunch_subtotal = $this->getMealSubtotal('4', 'lunch', $vegan_lunch_quantity);
-        $vegan_dinner_subtotal = $this->getMealSubtotal('4', 'dinner', $vegan_dinner_quantity);
-        $keto_breakfast_subtotal = $this->getMealSubtotal('5', 'breakfast', $keto_breakfast_quantity);
-        $keto_lunch_subtotal = $this->getMealSubtotal('5', 'lunch', $keto_lunch_quantity);
-        $keto_dinner_subtotal = $this->getMealSubtotal('5', 'dinner', $keto_dinner_quantity);
-        $diabetic_breakfast_subtotal = $this->getMealSubtotal('6', 'breakfast', $diabetic_breakfast_quantity);
-        $diabetic_lunch_subtotal = $this->getMealSubtotal('6', 'lunch', $diabetic_lunch_quantity);
-        $diabetic_dinner_subtotal = $this->getMealSubtotal('6', 'dinner', $diabetic_dinner_quantity);
-        $add_on_juice_subtotal = $this->getAddOnSubtotal(1, $add_on_juice_quantity);
-        $add_on_fruit_subtotal = $this->getAddOnSubtotal(1, $add_on_fruit_quantity);
-        $add_on_hummus_subtotal = $this->getAddOnSubtotal(1, $add_on_hummus_quantity);
-        $pickup_or_delivery_subtotal = 0;
-        if ($pickup_or_delivery == 'delivery') {
-            $pickup_or_delivery_subtotal = 5;
+        // validate form fields 
+        $error_standard_breakfast_quantity = $this->validator->checkQuantityField($standard_breakfast_quantity);
+        // if validator comes back with errors
+        if (!empty($error_standard_breakfast_quantity)) {
+            $order_error_message = 'There was a problem with your submission. Please resolve any errors and try again.';
+            $template = $this->twig->load('order_now.twig');
+            echo $template->render(['order_error_message' => $order_error_message, 'meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 
+                'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity,
+                'gluten_free_breakfast_quantity' => $gluten_free_breakfast_quantity, 'gluten_free_lunch_quantity' => $gluten_free_lunch_quantity, 'gluten_free_dinner_quantity' => $gluten_free_dinner_quantity,
+                'vegetarian_breakfast_quantity' => $vegetarian_breakfast_quantity, 'vegetarian_lunch_quantity' => $vegetarian_lunch_quantity, 'vegetarian_dinner_quantity' => $vegetarian_dinner_quantity,
+                'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
+                'keto_breakfast_quantity' => $keto_breakfast_quantity, 'keto_lunch_quantity' => $keto_lunch_quantity, 'keto_dinner_quantity' => $keto_dinner_quantity,
+                'diabetic_breakfast_quantity' => $diabetic_breakfast_quantity, 'diabetic_lunch_quantity' => $diabetic_lunch_quantity, 'diabetic_dinner_quantity' => $diabetic_dinner_quantity]);
+        } else {
+            $standard_breakfast_subtotal = $this->getMealSubtotal('1', 'breakfast', $standard_breakfast_quantity);
+            $standard_lunch_subtotal = $this->getMealSubtotal('1', 'lunch', $standard_lunch_quantity);
+            $standard_dinner_subtotal = $this->getMealSubtotal('1', 'dinner', $standard_dinner_quantity);
+            $gluten_free_breakfast_subtotal = $this->getMealSubtotal('2', 'breakfast', $gluten_free_breakfast_quantity);
+            $gluten_free_lunch_subtotal = $this->getMealSubtotal('2', 'lunch', $gluten_free_lunch_quantity);
+            $gluten_free_dinner_subtotal = $this->getMealSubtotal('2', 'dinner', $gluten_free_dinner_quantity);
+            $vegetarian_breakfast_subtotal = $this->getMealSubtotal('3', 'breakfast', $vegetarian_breakfast_quantity);
+            $vegetarian_lunch_subtotal = $this->getMealSubtotal('3', 'lunch', $vegetarian_lunch_quantity);
+            $vegetarian_dinner_subtotal = $this->getMealSubtotal('3', 'dinner', $vegetarian_dinner_quantity);
+            $vegan_breakfast_subtotal = $this->getMealSubtotal('4', 'breakfast', $vegan_breakfast_quantity);
+            $vegan_lunch_subtotal = $this->getMealSubtotal('4', 'lunch', $vegan_lunch_quantity);
+            $vegan_dinner_subtotal = $this->getMealSubtotal('4', 'dinner', $vegan_dinner_quantity);
+            $keto_breakfast_subtotal = $this->getMealSubtotal('5', 'breakfast', $keto_breakfast_quantity);
+            $keto_lunch_subtotal = $this->getMealSubtotal('5', 'lunch', $keto_lunch_quantity);
+            $keto_dinner_subtotal = $this->getMealSubtotal('5', 'dinner', $keto_dinner_quantity);
+            $diabetic_breakfast_subtotal = $this->getMealSubtotal('6', 'breakfast', $diabetic_breakfast_quantity);
+            $diabetic_lunch_subtotal = $this->getMealSubtotal('6', 'lunch', $diabetic_lunch_quantity);
+            $diabetic_dinner_subtotal = $this->getMealSubtotal('6', 'dinner', $diabetic_dinner_quantity);
+            $add_on_juice_subtotal = $this->getAddOnSubtotal(1, $add_on_juice_quantity);
+            $add_on_fruit_subtotal = $this->getAddOnSubtotal(1, $add_on_fruit_quantity);
+            $add_on_hummus_subtotal = $this->getAddOnSubtotal(1, $add_on_hummus_quantity);
+            $pickup_or_delivery_subtotal = 0;
+            if ($pickup_or_delivery == 'delivery') {
+                $pickup_or_delivery_subtotal = 5;
+            }
+            $line_items = array(
+                array("Standard Breakfast", $standard_breakfast_quantity, $standard_breakfast_subtotal),
+                array("Standard Lunch", $standard_lunch_quantity, $standard_lunch_subtotal),
+                array("Standard Dinner", $standard_dinner_quantity, $standard_dinner_subtotal),
+                array("Gluten Free Breakfast", $gluten_free_breakfast_quantity, $gluten_free_breakfast_subtotal),
+                array("Gluten Free Lunch", $gluten_free_lunch_quantity, $gluten_free_lunch_subtotal),
+                array("Gluten Free Dinner", $gluten_free_dinner_quantity, $gluten_free_dinner_subtotal),
+                array("Vegetarian Breakfast", $vegetarian_breakfast_quantity, $vegetarian_breakfast_subtotal),
+                array("Vegetarian Lunch", $vegetarian_lunch_quantity, $vegetarian_lunch_subtotal),
+                array("Vegetarian Dinner", $vegetarian_dinner_quantity, $vegetarian_dinner_subtotal),
+                array("Vegan Breakfast", $vegan_breakfast_quantity, $vegan_breakfast_subtotal),
+                array("Vegan Lunch", $vegan_lunch_quantity, $vegan_lunch_subtotal),
+                array("Vegan Dinner", $vegan_dinner_quantity, $vegan_dinner_subtotal),
+                array("Keto Breakfast", $keto_breakfast_quantity, $keto_breakfast_subtotal),
+                array("Keto Lunch", $keto_lunch_quantity, $keto_lunch_subtotal),
+                array("Keto Dinner", $keto_dinner_quantity, $keto_dinner_subtotal),
+                array("Diabetic Breakfast", $diabetic_breakfast_quantity, $diabetic_breakfast_subtotal),
+                array("Diabetic Lunch", $diabetic_lunch_quantity, $diabetic_lunch_subtotal),
+                array("Diabetic Dinner", $diabetic_dinner_quantity, $diabetic_dinner_subtotal),
+                array("Fresh Pressed Juice", $add_on_juice_quantity, $add_on_juice_subtotal),
+                array("Seasonal Fruit Salad", $add_on_fruit_quantity, $add_on_fruit_subtotal),
+                array("Hummus & Veggie Platter", $add_on_hummus_quantity, $add_on_hummus_subtotal),
+                array("Delivery", 1, $pickup_or_delivery_subtotal)
+            );
+            $subtotal = $standard_breakfast_subtotal + $standard_lunch_subtotal + $standard_dinner_subtotal + $vegetarian_breakfast_subtotal + $vegetarian_lunch_subtotal +                            $vegetarian_dinner_subtotal + $vegan_breakfast_subtotal + $vegan_lunch_subtotal + $vegan_dinner_subtotal + $gluten_free_breakfast_subtotal + $gluten_free_lunch_subtotal +                $gluten_free_dinner_subtotal + $keto_breakfast_subtotal + $keto_lunch_subtotal + $keto_dinner_subtotal + $diabetic_breakfast_subtotal + $diabetic_lunch_subtotal +                        $diabetic_dinner_subtotal + $add_on_juice_subtotal + $add_on_fruit_subtotal + $add_on_hummus_subtotal + $pickup_or_delivery_subtotal;
+            $tax = $this->calculateTax($subtotal);
+            $total = $subtotal + $tax;
+            $show_total_table = true;
+            $template = $this->twig->load('order_now.twig');
+            echo $template->render(['order_error_message' => $order_error_message, 'meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'subtotal' => $subtotal, 'line_items' => $line_items, 'tax' => $tax, 'total' => $total, 'show_total_table' => $show_total_table,
+                'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity,
+                'gluten_free_breakfast_quantity' => $gluten_free_breakfast_quantity, 'gluten_free_lunch_quantity' => $gluten_free_lunch_quantity, 'gluten_free_dinner_quantity' => $gluten_free_dinner_quantity,
+                'vegetarian_breakfast_quantity' => $vegetarian_breakfast_quantity, 'vegetarian_lunch_quantity' => $vegetarian_lunch_quantity, 'vegetarian_dinner_quantity' => $vegetarian_dinner_quantity,
+                'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
+                'keto_breakfast_quantity' => $keto_breakfast_quantity, 'keto_lunch_quantity' => $keto_lunch_quantity, 'keto_dinner_quantity' => $keto_dinner_quantity,
+                'diabetic_breakfast_quantity' => $diabetic_breakfast_quantity, 'diabetic_lunch_quantity' => $diabetic_lunch_quantity, 'diabetic_dinner_quantity' => $diabetic_dinner_quantity]);
         }
-        $line_items = array (
-            array("Standard Breakfast", $standard_breakfast_quantity, $standard_breakfast_subtotal),
-            array("Standard Lunch", $standard_lunch_quantity, $standard_lunch_subtotal),
-            array("Standard Dinner", $standard_dinner_quantity, $standard_dinner_subtotal),
-            array("Gluten Free Breakfast", $gluten_free_breakfast_quantity, $gluten_free_breakfast_subtotal),
-            array("Gluten Free Lunch", $gluten_free_lunch_quantity, $gluten_free_lunch_subtotal),
-            array("Gluten Free Dinner", $gluten_free_dinner_quantity, $gluten_free_dinner_subtotal),
-            array("Vegetarian Breakfast", $vegetarian_breakfast_quantity, $vegetarian_breakfast_subtotal),
-            array("Vegetarian Lunch", $vegetarian_lunch_quantity, $vegetarian_lunch_subtotal),
-            array("Vegetarian Dinner", $vegetarian_dinner_quantity, $vegetarian_dinner_subtotal),
-            array("Vegan Breakfast", $vegan_breakfast_quantity, $vegan_breakfast_subtotal),
-            array("Vegan Lunch", $vegan_lunch_quantity, $vegan_lunch_subtotal),
-            array("Vegan Dinner", $vegan_dinner_quantity, $vegan_dinner_subtotal),
-            array("Keto Breakfast", $keto_breakfast_quantity, $keto_breakfast_subtotal),
-            array("Keto Lunch", $keto_lunch_quantity, $keto_lunch_subtotal),
-            array("Keto Dinner", $keto_dinner_quantity, $keto_dinner_subtotal),
-            array("Diabetic Breakfast", $diabetic_breakfast_quantity, $diabetic_breakfast_subtotal),
-            array("Diabetic Lunch", $diabetic_lunch_quantity, $diabetic_lunch_subtotal),
-            array("Diabetic Dinner", $diabetic_dinner_quantity, $diabetic_dinner_subtotal),
-            array("Fresh Pressed Juice", $add_on_juice_quantity, $add_on_juice_subtotal),
-            array("Seasonal Fruit Salad", $add_on_fruit_quantity, $add_on_fruit_subtotal),
-            array("Hummus & Veggie Platter", $add_on_hummus_quantity, $add_on_hummus_subtotal),
-            array("Delivery", 1, $pickup_or_delivery_subtotal)
-          );
-        $subtotal = $standard_breakfast_subtotal + $standard_lunch_subtotal + $standard_dinner_subtotal + $vegetarian_breakfast_subtotal + $vegetarian_lunch_subtotal + $vegetarian_dinner_subtotal + $vegan_breakfast_subtotal + $vegan_lunch_subtotal + $vegan_dinner_subtotal + $gluten_free_breakfast_subtotal + $gluten_free_lunch_subtotal + $gluten_free_dinner_subtotal + $keto_breakfast_subtotal + $keto_lunch_subtotal + $keto_dinner_subtotal + $diabetic_breakfast_subtotal + $diabetic_lunch_subtotal + $diabetic_dinner_subtotal + $add_on_juice_subtotal + $add_on_fruit_subtotal + $add_on_hummus_subtotal + $pickup_or_delivery_subtotal;
-        $tax = $this->calculateTax($subtotal);
-        $total = $subtotal + $tax;
-        $show_total_table = true;
-        $template = $this->twig->load('order_now.twig');
-        echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons, 'zip_codes' => $zip_codes, 'subtotal' => $subtotal, 'line_items' => $line_items, 'tax' => $tax, 'total' => $total, 'show_total_table' => $show_total_table,
-                'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity, 
-            'gluten_free_breakfast_quantity' => $gluten_free_breakfast_quantity, 'gluten_free_lunch_quantity' => $gluten_free_lunch_quantity, 'gluten_free_dinner_quantity' => $gluten_free_dinner_quantity,
-            'vegetarian_breakfast_quantity' => $vegetarian_breakfast_quantity, 'vegetarian_lunch_quantity' => $vegetarian_lunch_quantity, 'vegetarian_dinner_quantity' => $vegetarian_dinner_quantity,
-            'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
-            'keto_breakfast_quantity' => $keto_breakfast_quantity, 'keto_lunch_quantity' => $keto_lunch_quantity, 'keto_dinner_quantity' => $keto_dinner_quantity,
-            'diabetic_breakfast_quantity' => $diabetic_breakfast_quantity, 'diabetic_lunch_quantity' => $diabetic_lunch_quantity, 'diabetic_dinner_quantity' => $diabetic_dinner_quantity]);
     }
-    
+
     function getMealSubtotal($plan_id, $meal, $quantity) {
         $meal_plan = $this->meal_plans_table->get_meal_plan($plan_id);
         $subtotal = doubleval($meal_plan[$meal . 'Price']) * doubleval($quantity);
         return $subtotal;
     }
-    
+
     function getAddOnSubtotal($add_on_id, $quantity) {
         $add_on = $this->add_ons_table->get_add_on($add_on_id);
         $subtotal = doubleval($add_on['addOnPrice']) * doubleval($quantity);
         return $subtotal;
     }
-    
+
     function calculateTax($subtotal) {
         $TAX_RATE = 0.0625;
         $tax = $subtotal * $TAX_RATE;
