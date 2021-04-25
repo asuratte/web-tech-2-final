@@ -186,6 +186,11 @@ span.color-highlight {
     color: #ff9933;
 }
 
+h3.customer-pick {
+    color: #ff9933;
+    font-size: 1.1rem;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .card-col {

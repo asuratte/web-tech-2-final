@@ -11,6 +11,9 @@
                     <div class="card">
                         <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
                         <div class="card-body">
+                            {% if session.dietary_preference is defined and session.dietary_preference == meal_plan.planName %}
+                                <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                            {% endif %}
                             <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
                             <p class="card-text">{{ meal_plan.planDescription|e }}</p>
                             <ul class="card-list pl-0">
