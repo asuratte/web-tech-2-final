@@ -7,6 +7,7 @@ require_once './model/StatesTable.php';
 require_once './model/CustomersTable.php';
 require_once './model/AddOnsTable.php';
 require_once './model/ZipCodesTable.php';
+require_once './model/OrdersTable.php';
 require_once 'autoload.php';
 
 class Controller {
@@ -18,6 +19,7 @@ class Controller {
     private $customers_table;
     private $add_ons_table;
     private $zip_codes_table;
+    private $orders_table;
     private $twig;
 
     /**
@@ -33,6 +35,7 @@ class Controller {
         $this->zip_codes_table = new ZipCodesTable($this->db);
         $this->states_table = new StatesTable($this->db);
         $this->customers_table = new CustomersTable($this->db);
+        $this->orders_table = new OrdersTable($this->db);
         $this->validator = new Validator($this->db, $this->customers_table);
         $this->action = $this->getAction();
     }
