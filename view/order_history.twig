@@ -3,6 +3,26 @@
 <div class="container py-4 text-center">
     <main class="w-75 mx-auto">
         <h1>Order History</h1> 
+        <div class="order-history text-left mt-5">
+            <table class="table table-bordered table-sm mb-4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Order Date</th>
+                        <th>Order ID</th>
+                        <th>Items Ordered</th>
+                        <th>Order Total</th>
+                    </tr>
+                </thead>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.orderDate }}</td>
+                        <td>{{ order.orderID }}</td>
+                        <td>{{ order.itemName }} <span class="color-highlight">x</span> {{ order.itemQuantity }} <span class="color-highlight">|</span> ${{ order.itemTotal }}</td>
+                        <td>{{ order.orderTotal }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </main>
 </div>
 {{ include('/shared/footer.twig') }}

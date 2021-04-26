@@ -8,24 +8,18 @@ class OrdersTable {
         $this->db = $db;
     }
 
-    function get_orders($customer_id) {
-        $query = 'SELECT * FROM orders
-                  WHERE customer_id = :customerID';
+    function get_orders_and_line_items($customer_id) {
+        $query = 'SELECT orders.orderID, orders.orderDate, orders.orderTotal, lineItems.itemName, lineItems.itemQuantity, lineItems.itemTotal
+                FROM orders
+                INNER JOIN lineItems ON orders.orderID=lineItems.orderID
+                WHERE customerID = :customer_id
+                ORDER BY orders.orderDate desc';
         $statement = $this->db->getDB()->prepare($query);
-        $statement->bindValue(':customerID', $customer_id);
+        $statement->bindValue(':customer_id', $customer_id);
         $statement->execute();
-        $orders = $statement->fetch();
-        return $orders;
-    }
-
-    function get_order_line_items($order_id) {
-        $query = 'SELECT * FROM lineItems
-              WHERE order_id = :orderID';
-        $statement = $this->db->getDB()->prepare($query);
-        $statement->bindValue(':orderID', $order_id);
-        $statement->execute();
-        $order_line_items = $statement->fetch();
-        return $order_line_items;
+        $orders_and_line_items = $statement->fetchAll();
+        $statement->closeCursor();
+        return $orders_and_line_items;
     }
 
 }
