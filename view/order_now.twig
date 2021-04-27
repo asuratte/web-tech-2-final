@@ -2,12 +2,12 @@
 {{ include('/shared/navigation.twig') }}
 <div class="container py-4 text-center">
     <main class="mx-auto px-5">
-        <h1>Order Now</h1> 
+        <h1>Order Now</h1>
         {% if session.is_valid_user is not defined %}
             <p class="alert alert-warning log-in-alert mt-4 mx-auto">You must be logged in to order. <a href=".?action=Show Log In">Log in now</a> or <a href=".?action=Show Sign Up">sign up for an account</a></p>
         {% else %}
             {% if order_error_message is not empty %}
-                <p class="alert alert-danger order-alert mt-4 mx-auto">{{ order_error_message|e }}</p>  
+                <p class="alert alert-danger order-alert mt-4 mx-auto">{{ order_error_message|e }}</p>
             {% endif %}
             {% if show_total_table == true %}
                 <div class="order-total text-left mt-5">
@@ -43,59 +43,306 @@
             <form action="." method="post" id="order_form" class="text-left mx-auto">
                 <h2 class="d-inline-block mt-3">Meal Selection</h2>
                 <div class="meal-card-container row card-deck mt-3">
-                    {% for meal_plan in meal_plans %}
-                        <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
-                            <div class="card">
-                                <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}">
-                                <div class="card-body text-center">
-                                    {% if session.dietary_preference is defined and session.dietary_preference == meal_plan.planName %}
-                                        <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                    <!-- begin meal cards -->
+                    <!-- Standard -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ standard_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == standard_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ standard_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ standard_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ standard_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_standard_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ standard_plan.planID|e }}-breakfast-quantity" value="{{ standard_breakfast_quantity|e }}"></div>
+                                        {% if error_standard_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_standard_breakfast_quantity|e }}</span>
                                     {% endif %}
-                                    <h2 class="card-title">{{ meal_plan.planName|e }}</h2>
-                                    <div class="form-group">
-                                        <div class="col"><span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ meal_plan.breakfastPrice }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-breakfast-quantity" value=""></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ standard_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ standard_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_standard_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ standard_plan.planID|e }}-lunch-quantity" value="{{ standard_lunch_quantity|e }}">
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ meal_plan.lunchPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-lunch-quantity" value=""></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ meal_plan.dinnerPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ meal_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="meal-{{ meal_plan.planID|e }}-dinner-quantity" value=""></div>
-                                    </div>
+                                    {% if error_standard_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_standard_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ standard_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ standard_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_standard_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ standard_plan.planID|e }}-dinner-quantity" value="{{ standard_dinner_quantity|e }}"></div>
+                                        {% if error_standard_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_standard_dinner_quantity|e }}</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <!-- Gluten Free -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ gluten_free_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == gluten_free_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ gluten_free_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ gluten_free_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ gluten_free_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_gluten_free_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ gluten_free_plan.planID|e }}-breakfast-quantity" value="{{ gluten_free_breakfast_quantity|e }}"></div>
+                                        {% if error_gluten_free_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_gluten_free_breakfast_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ gluten_free_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ gluten_free_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_gluten_free_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ gluten_free_plan.planID|e }}-lunch-quantity" value="{{ gluten_free_lunch_quantity|e }}">
+                                    </div>
+                                    {% if error_gluten_free_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_gluten_free_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ gluten_free_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ gluten_free_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_gluten_free_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ gluten_free_plan.planID|e }}-dinner-quantity" value="{{ gluten_free_dinner_quantity|e }}"></div>
+                                        {% if error_gluten_free_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_gluten_free_dinner_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Vegetarian -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ vegetarian_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == vegetarian_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ vegetarian_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ vegetarian_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegetarian_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegetarian_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegetarian_plan.planID|e }}-breakfast-quantity" value="{{ vegetarian_breakfast_quantity|e }}"></div>
+                                        {% if error_vegetarian_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegetarian_breakfast_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ vegetarian_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegetarian_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegetarian_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegetarian_plan.planID|e }}-lunch-quantity" value="{{ vegetarian_lunch_quantity|e }}">
+                                    </div>
+                                    {% if error_vegetarian_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegetarian_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ vegetarian_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegetarian_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegetarian_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegetarian_plan.planID|e }}-dinner-quantity" value="{{ vegetarian_dinner_quantity|e }}"></div>
+                                        {% if error_vegetarian_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegetarian_dinner_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Vegan -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ vegan_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == vegan_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ vegan_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ vegan_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegan_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegan_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegan_plan.planID|e }}-breakfast-quantity" value="{{ vegan_breakfast_quantity|e }}"></div>
+                                        {% if error_vegan_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegan_breakfast_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ vegan_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegan_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegan_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegan_plan.planID|e }}-lunch-quantity" value="{{ vegan_lunch_quantity|e }}">
+                                    </div>
+                                    {% if error_vegan_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegan_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ vegan_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ vegan_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_vegan_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ vegan_plan.planID|e }}-dinner-quantity" value="{{ vegan_dinner_quantity|e }}"></div>
+                                        {% if error_vegan_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_vegan_dinner_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Keto -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ keto_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == keto_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ keto_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ keto_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ keto_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_keto_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ keto_plan.planID|e }}-breakfast-quantity" value="{{ keto_breakfast_quantity|e }}"></div>
+                                        {% if error_keto_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_keto_breakfast_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ keto_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ keto_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_keto_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ keto_plan.planID|e }}-lunch-quantity" value="{{ keto_lunch_quantity|e }}">
+                                    </div>
+                                    {% if error_keto_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_keto_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ keto_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ keto_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_keto_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ keto_plan.planID|e }}-dinner-quantity" value="{{ keto_dinner_quantity|e }}"></div>
+                                        {% if error_keto_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_keto_dinner_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Diabetic -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ diabetic_plan.planImage|e }}">
+                            <div class="card-body text-center">
+                                {% if session.dietary_preference is defined and session.dietary_preference == diabetic_plan.planName %}
+                                    <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
+                                {% endif %}
+                                <h2 class="card-title">{{ diabetic_plan.planName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col">
+                                        <span class="font-weight-bold">Breakfast</span> - <span class="font-italic">${{ diabetic_plan.breakfastPrice|e }}/ea.</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ diabetic_plan.planID|e }}-breakfast-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_diabetic_breakfast_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ diabetic_plan.planID|e }}-breakfast-quantity" value="{{ diabetic_breakfast_quantity|e }}"></div>
+                                        {% if error_diabetic_breakfast_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_diabetic_breakfast_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Lunch</span> - <span class="font-italic">${{ diabetic_plan.lunchPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ diabetic_plan.planID|e }}-lunch-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_diabetic_lunch_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ diabetic_plan.planID|e }}-lunch-quantity" value="{{ diabetic_lunch_quantity|e }}">
+                                    </div>
+                                    {% if error_diabetic_lunch_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_diabetic_lunch_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-weight-bold">Dinner</span> - <span class="font-italic">${{ diabetic_plan.dinnerPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="meal-{{ diabetic_plan.planID|e }}-dinner-quantity" class="pr-2">Qty:</label>
+                                        <input class="form-control order-quantity {% if error_diabetic_dinner_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="meal-{{ diabetic_plan.planID|e }}-dinner-quantity" value="{{ diabetic_dinner_quantity|e }}"></div>
+                                        {% if error_diabetic_dinner_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_diabetic_dinner_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end meal cards -->
                 </div>
                 <h2 class="d-inline-block mt-3">Add-On Selection</h2>
                 <div class="meal-card-container row card-deck mt-3">
-                    {% for add_on in add_ons %}
-                        <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
-                            <div class="card">
-                                <img class="card-img-top" src="./view/images/{{ add_on.addOnImage|e }}" alt="Standard">
-                                <div class="card-body text-center">
-                                    <h2 class="card-title px-2">{{ add_on.addOnName|e }}</h2>
-                                    <div class="form-group">
-                                        <div class="col"><span class="font-italic">${{ add_on.addOnPrice|e }}/ea.</span></div>
-                                        <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on.addOnID|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity" type="text" name="add-on-{{ add_on.addOnID|e }}-quantity"></div>
-                                    </div>
+                    <!-- begin add-on cards  -->
+                    <!-- add on - juice -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ add_on_juice.addOnImage|e }}">
+                            <div class="card-body text-center">
+                                <h2 class="card-title px-2">{{ add_on_juice.addOnName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-italic">${{ add_on_juice.addOnPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on_juice.addOnID|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity {% if error_add_on_juice_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="add-on-{{ add_on_juice.addOnID|e }}-quantity" value="{{ add_on_juice_quantity|e }}"></div>
+                                        {% if error_add_on_juice_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_add_on_juice_quantity|e }}</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <!-- add on - fruit -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ add_on_fruit.addOnImage|e }}">
+                            <div class="card-body text-center">
+                                <h2 class="card-title px-2">{{ add_on_fruit.addOnName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-italic">${{ add_on_fruit.addOnPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on_fruit.addOnID|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity {% if error_add_on_fruit_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="add-on-{{ add_on_fruit.addOnID|e }}-quantity" value="{{ add_on_fruit_quantity|e }}"></div>
+                                        {% if error_add_on_fruit_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_add_on_fruit_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- add on - hummus -->
+                    <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                        <div class="card">
+                            <img class="card-img-top" src="./view/images/{{ add_on_hummus.addOnImage|e }}">
+                            <div class="card-body text-center">
+                                <h2 class="card-title px-2">{{ add_on_hummus.addOnName|e }}</h2>
+                                <div class="form-group">
+                                    <div class="col"><span class="font-italic">${{ add_on_hummus.addOnPrice|e }}/ea.</span></div>
+                                    <div class="col d-flex justify-content-center pt-2"><label for="add-on-{{ add_on_hummus.addOnID|e }}-quantity" class="pr-2">Qty:</label><input class="form-control order-quantity {% if error_add_on_hummus_quantity is not empty %}{{ 'field-error' }}{% endif %}" type="text" name="add-on-{{ add_on_hummus.addOnID|e }}-quantity" value="{{ add_on_hummus_quantity|e }}"></div>
+                                        {% if error_add_on_hummus_quantity is not empty %}
+                                        <span class="text-danger d-inline-block pt-1 font-italic">{{ error_add_on_hummus_quantity|e }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end add-on cards  -->
                 </div>
                 <h2 class="d-inline-block mt-3">Pickup or Delivery</h2>
                 <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery1" value="pickup" checked>
+                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery1" value="pickup" {% if pickup_or_delivery == 'pickup' %}{{ 'checked' }}{% endif %}>
                         <label class="form-check-label" for="pickupOrDelivery1">
                             Pickup <span class="font-italic">(free)</span>
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery2" value="delivery">
+                        <input class="form-check-input" type="radio" name="pickupOrDelivery" id="pickupOrDelivery2" value="delivery" {% if pickup_or_delivery == 'delivery' %}{{ 'checked' }}{% endif %}>
                         <label class="form-check-label" for="pickupOrDelivery2">
                             Delivery <span class="font-italic">($5)</span>
                             <p class="small">Delivery is only available to the following zip codes: {% for zip_code in zip_codes %} {{ zip_code.zipCode|e }}{% endfor %}. Order will be delivered to the address in your profile.</p>
