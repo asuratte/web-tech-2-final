@@ -558,7 +558,7 @@ class Controller {
             $tax = $this->calculateTax($subtotal);
             $total = $subtotal + $tax;
             $show_total_table = true;
-            $order_success_message = 'Order successful!';
+            $order_success_message = 'Thanks for your order!';
             $order_error_message = '';
             // submit order to database, hide order page content, show message saying order was submitted and link to view orders page
             $order_date = $date = date('Y-m-d H:i:s');
