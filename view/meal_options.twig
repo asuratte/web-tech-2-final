@@ -4,12 +4,12 @@
     <main class="mx-auto px-5">
         <h1>Meal Options</h1>
         <p class="w-75 mx-auto">We have a wide variety of meal plans suited for different dietary preferences.</p>
-        <p class="w-75 mx-auto">Ready to get started? <a href=".?action=Show Order Now">Order Now</a></p>
+        <p class="w-75 mx-auto">Ready to get started? <a href=".?action=Show Order Now">Order Now</a> or <a href=".?action=Show Current Meals">view our current meals</a>.</p>
         <div class="meal-card-container row card-deck mt-5">
             {% for meal_plan in meal_plans %}
                 <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
                     <div class="card">
-                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}" alt="Standard">
+                        <img class="card-img-top" src="./view/images/{{ meal_plan.planImage|e }}">
                         <div class="card-body">
                             {% if session.dietary_preference is defined and session.dietary_preference == meal_plan.planName %}
                                 <h3 class="customer-pick"><i class="fa fa-heart" aria-hidden="true"></i> Recommended for you</h3>
@@ -31,7 +31,7 @@
             {% for add_on in add_ons %}
                 <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
                     <div class="card">
-                        <img class="card-img-top" src="./view/images/{{ add_on.addOnImage|e }}" alt="Standard">
+                        <img class="card-img-top" src="./view/images/{{ add_on.addOnImage|e }}">
                         <div class="card-body text-center">
                             <h2 class="card-title px-2">{{ add_on.addOnName|e }}</h2>
                             <p class="card-text">{{ add_on.addOnDescription|e }}</p>

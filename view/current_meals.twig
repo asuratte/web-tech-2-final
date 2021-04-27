@@ -1,0 +1,42 @@
+{{ include('/shared/header.twig') }}
+{{ include('/shared/navigation.twig') }}
+<div class="container py-4 text-center">
+    <main class="mx-auto px-5">
+        <h1>Current Meals</h1>
+        <p class="w-75 mx-auto">New options added weekly.</p>
+        <p class="w-75 mx-auto">Ready to get started? <a href=".?action=Show Order Now">Order Now</a></p>
+        {% for current_meal in current_meals %}
+            <h2 class="pt-3">{{ current_meal.planName }}</h2>
+        <div class="meal-card-container row card-deck mt-3">
+                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                    <div class="card">
+                        <img class="card-img-top" src="./view/images/current-meals/{{ current_meal.breakfastImage|e }}">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ current_meal.breakfastName|e }}</h2>
+                            <p class="card-text">{{ current_meal.breakfastDescription|e }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                    <div class="card">
+                        <img class="card-img-top" src="./view/images/current-meals/{{ current_meal.lunchImage|e }}">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ current_meal.lunchName|e }}</h2>
+                            <p class="card-text">{{ current_meal.lunchDescription|e }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
+                    <div class="card">
+                        <img class="card-img-top" src="./view/images/current-meals/{{ current_meal.dinnerImage|e }}">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ current_meal.dinnerName|e }}</h2>
+                            <p class="card-text">{{ current_meal.dinnerDescription|e }}</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        {% endfor %}
+    </main>
+</div>
+{{ include('/shared/footer.twig') }}

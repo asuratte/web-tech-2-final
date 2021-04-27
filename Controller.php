@@ -87,6 +87,9 @@ class Controller {
             case 'Submit order':
                 $this->processSubmitOrder();
                 break;
+            case 'Show Current Meals':
+                $this->processShowCurrentMealsPage();
+                break;
             default:
                 $this->processShowHomePage();
                 break;
@@ -111,6 +114,12 @@ class Controller {
         $add_ons = $this->add_ons_table->get_add_ons();
         $template = $this->twig->load('meal_options.twig');
         echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons]);
+    }
+    
+    private function processShowCurrentMealsPage() {
+        $current_meals = $this->meal_plans_table->get_current_meals();
+        $template = $this->twig->load('current_meals.twig');
+        echo $template->render(['current_meals' => $current_meals]);
     }
 
     private function processShowLogInPage() {

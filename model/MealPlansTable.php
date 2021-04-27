@@ -27,6 +27,17 @@ class MealPlansTable {
         return $meal_plan;
     }
 
+    function get_current_meals() {
+        $query = 'SELECT currentMeals.planID, currentMeals.breakfastName, currentMeals.breakfastDescription, currentMeals.breakfastImage, currentMeals.lunchName, currentMeals.lunchDescription, currentMeals.lunchImage, currentMeals.dinnerName, currentMeals.dinnerDescription, currentMeals.dinnerImage, mealPlans.planName
+                FROM currentMeals
+                INNER JOIN mealPlans ON currentMeals.planID=mealPlans.planID';
+         $statement = $this->db->getDB()->prepare($query);
+        $statement->execute();
+        $current_meals = $statement->fetchAll();
+        $statement->closeCursor();
+        return $current_meals;
+    }
+
 }
 
 ?>
