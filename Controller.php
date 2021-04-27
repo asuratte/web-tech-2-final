@@ -523,6 +523,49 @@ class Controller {
                 'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
                 'keto_breakfast_quantity' => $keto_breakfast_quantity, 'keto_lunch_quantity' => $keto_lunch_quantity, 'keto_dinner_quantity' => $keto_dinner_quantity,
                 'diabetic_breakfast_quantity' => $diabetic_breakfast_quantity, 'diabetic_lunch_quantity' => $diabetic_lunch_quantity, 'diabetic_dinner_quantity' => $diabetic_dinner_quantity, 'error_standard_breakfast_quantity' => $error_standard_breakfast_quantity, 'error_standard_lunch_quantity' => $error_standard_lunch_quantity, 'error_standard_dinner_quantity' => $error_standard_dinner_quantity, 'error_gluten_free_breakfast_quantity' => $error_gluten_free_breakfast_quantity, 'error_gluten_free_lunch_quantity' => $error_gluten_free_lunch_quantity, 'error_gluten_free_dinner_quantity' => $error_gluten_free_dinner_quantity, 'error_vegetarian_breakfast_quantity' => $error_vegetarian_breakfast_quantity, 'error_vegetarian_lunch_quantity' => $error_vegetarian_lunch_quantity, 'error_vegetarian_dinner_quantity' => $error_vegetarian_dinner_quantity, 'error_vegan_breakfast_quantity' => $error_vegan_breakfast_quantity, 'error_vegan_lunch_quantity' => $error_vegan_lunch_quantity, 'error_vegan_dinner_quantity' => $error_vegan_dinner_quantity, 'error_keto_breakfast_quantity' => $error_keto_breakfast_quantity, 'error_keto_lunch_quantity' => $error_keto_lunch_quantity, 'error_keto_dinner_quantity' => $error_keto_dinner_quantity, 'error_diabetic_breakfast_quantity' => $error_diabetic_breakfast_quantity, 'error_diabetic_lunch_quantity' => $error_diabetic_lunch_quantity, 'error_diabetic_dinner_quantity' => $error_diabetic_dinner_quantity, 'add_on_hummus_quantity' => $add_on_hummus_quantity, 'error_add_on_hummus_quantity' => $error_add_on_hummus_quantity, 'add_on_juice_quantity' => $add_on_juice_quantity, 'error_add_on_juice_quantity' => $error_add_on_juice_quantity, 'add_on_fruit_quantity' => $add_on_fruit_quantity, 'error_add_on_fruit_quantity' => $error_add_on_fruit_quantity, 'pickup_or_delivery' => $pickup_or_delivery]);
+        } else if ($standard_breakfast_quantity == 0 && $standard_dinner_quantity == 0 && $standard_lunch_quantity == 0 && $gluten_free_breakfast_quantity == 0 && $gluten_free_dinner_quantity == 0 && $gluten_free_lunch_quantity == 0 && $vegetarian_breakfast_quantity == 0 && $vegetarian_dinner_quantity == 0 && $vegetarian_lunch_quantity == 0 && $vegan_breakfast_quantity == 0 && $vegan_dinner_quantity == 0 && $vegan_lunch_quantity == 0 && $keto_breakfast_quantity == 0 && $keto_dinner_quantity == 0 && $keto_lunch_quantity == 0 && $diabetic_breakfast_quantity == 0 && $diabetic_dinner_quantity == 0 && $diabetic_lunch_quantity == 0 && $add_on_fruit_quantity == 0 && $add_on_hummus_quantity == 0 && $add_on_juice_quantity == 0) {
+            $order_error_message = 'Please select an item before placing an order.';
+            $order_success_message = '';
+            $standard_plan = $this->meal_plans_table->get_meal_plan(1);
+            $gluten_free_plan = $this->meal_plans_table->get_meal_plan(2);
+            $vegetarian_plan = $this->meal_plans_table->get_meal_plan(3);
+            $vegan_plan = $this->meal_plans_table->get_meal_plan(4);
+            $keto_plan = $this->meal_plans_table->get_meal_plan(5);
+            $diabetic_plan = $this->meal_plans_table->get_meal_plan(6);
+            $add_on_juice = $this->add_ons_table->get_add_on(1);
+            $add_on_fruit = $this->add_ons_table->get_add_on(2);
+            $add_on_hummus = $this->add_ons_table->get_add_on(3);
+            $zip_codes = $this->zip_codes_table->get_zip_codes();
+            $standard_breakfast_quantity = 0;
+            $standard_lunch_quantity = 0;
+            $standard_dinner_quantity = 0;
+            $gluten_free_breakfast_quantity = 0;
+            $gluten_free_lunch_quantity = 0;
+            $gluten_free_dinner_quantity = 0;
+            $vegetarian_breakfast_quantity = 0;
+            $vegetarian_lunch_quantity = 0;
+            $vegetarian_dinner_quantity = 0;
+            $vegan_breakfast_quantity = 0;
+            $vegan_lunch_quantity = 0;
+            $vegan_dinner_quantity = 0;
+            $keto_breakfast_quantity = 0;
+            $keto_lunch_quantity = 0;
+            $keto_dinner_quantity = 0;
+            $diabetic_breakfast_quantity = 0;
+            $diabetic_lunch_quantity = 0;
+            $diabetic_dinner_quantity = 0;
+            $add_on_hummus_quantity = 0;
+            $add_on_juice_quantity = 0;
+            $add_on_fruit_quantity = 0;
+            $pickup_or_delivery = 'pickup';
+            $show_total_table = false;
+            $template = $this->twig->load('order_now.twig');
+            echo $template->render(['standard_plan' => $standard_plan, 'gluten_free_plan' => $gluten_free_plan, 'vegetarian_plan' => $vegetarian_plan, 'vegan_plan' => $vegan_plan, 'keto_plan' => $keto_plan, 'diabetic_plan' => $diabetic_plan, 'order_error_message' => $order_error_message, 'order_success_message' => $order_success_message, 'add_on_juice' => $add_on_juice, 'add_on_fruit' => $add_on_fruit, 'add_on_hummus' => $add_on_hummus, 'zip_codes' => $zip_codes, 'show_total_table' => $show_total_table, 'standard_breakfast_quantity' => $standard_breakfast_quantity, 'standard_lunch_quantity' => $standard_lunch_quantity, 'standard_dinner_quantity' => $standard_dinner_quantity,
+                'gluten_free_breakfast_quantity' => $gluten_free_breakfast_quantity, 'gluten_free_lunch_quantity' => $gluten_free_lunch_quantity, 'gluten_free_dinner_quantity' => $gluten_free_dinner_quantity,
+                'vegetarian_breakfast_quantity' => $vegetarian_breakfast_quantity, 'vegetarian_lunch_quantity' => $vegetarian_lunch_quantity, 'vegetarian_dinner_quantity' => $vegetarian_dinner_quantity,
+                'vegan_breakfast_quantity' => $vegan_breakfast_quantity, 'vegan_lunch_quantity' => $vegan_lunch_quantity, 'vegan_dinner_quantity' => $vegan_dinner_quantity,
+                'keto_breakfast_quantity' => $keto_breakfast_quantity, 'keto_lunch_quantity' => $keto_lunch_quantity, 'keto_dinner_quantity' => $keto_dinner_quantity,
+                'diabetic_breakfast_quantity' => $diabetic_breakfast_quantity, 'diabetic_lunch_quantity' => $diabetic_lunch_quantity, 'diabetic_dinner_quantity' => $diabetic_dinner_quantity, 'add_on_hummus_quantity' => $add_on_hummus_quantity, 'add_on_juice_quantity' => $add_on_juice_quantity, 'add_on_fruit_quantity' => $add_on_fruit_quantity, 'pickup_or_delivery' => $pickup_or_delivery]);
         } else {
             $standard_breakfast_subtotal = $this->getMealSubtotal('1', 'breakfast', $standard_breakfast_quantity);
             $standard_lunch_subtotal = $this->getMealSubtotal('1', 'lunch', $standard_lunch_quantity);
