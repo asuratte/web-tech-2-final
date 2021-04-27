@@ -5,6 +5,10 @@
         <h1>Order History</h1> 
         <div class="order-history text-left mt-5">
             {% if orders is not empty  %} 
+                <div class="order-history-controls text-right">
+                    <p>Sort by: <a href=".?action=Show Order History Date Ascending">Date - Oldest First</a> | 
+                    <a href=".?action=Show Order History">Date - Most Recent First</a></p>
+                </div>
             <table class="table table-bordered table-sm mb-4">
                 <thead class="thead-dark">
                     <tr>

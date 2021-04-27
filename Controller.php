@@ -75,6 +75,9 @@ class Controller {
             case 'Show Order History':
                 $this->processShowOrderHistoryPage();
                 break;
+            case 'Show Order History Date Ascending':
+                $this->processShowOrderHistoryPageDateAscending();
+                break;
             case 'Show Order Now':
                 $this->processShowOrderNowPage();
                 break;
@@ -128,7 +131,13 @@ class Controller {
         $template = $this->twig->load('order_history.twig');
         echo $template->render(['orders' => $orders]);
     }
-
+    
+    private function processShowOrderHistoryPageDateAscending() {
+        $customer_id = $_SESSION['customer_id'];
+        $orders = $this->orders_table->get_orders_and_line_items_ascending($customer_id);
+        $template = $this->twig->load('order_history.twig');
+        echo $template->render(['orders' => $orders]);
+    }
     private function processShowOrderNowPage() {
         $order_error_message = '';
         $order_success_message = '';
