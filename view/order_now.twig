@@ -10,7 +10,8 @@
                 <p class="alert alert-danger order-alert mt-4 mx-auto">{{ order_error_message|e }}</p>
             {% endif %}
             {% if order_success_message is not empty %}
-                <p class="mt-4 mx-auto">{{ order_success_message|e }}  <a href=".?action=Show Order History">View your order history</a></p>
+                <p class="mt-4 mx-auto">{{ order_success_message|e }}</p>
+                <p class="mx-auto"><a href=".?action=Show Order History">View your order history</a></p>
             {% endif %}
             {% if show_total_table == true %}
                 <div class="order-total text-left mt-5">

@@ -567,8 +567,6 @@ class Controller {
             $tax = $this->calculateTax($subtotal);
             $total = $subtotal + $tax;
             $show_total_table = true;
-            $order_success_message = 'Thanks for your order!';
-            $order_error_message = '';
             // submit order to database, hide order page content, show message saying order was submitted and link to view orders page
             $order_date = $date = date('Y-m-d H:i:s');
             $this->orders_table->add_order($order_date, $total, $_SESSION['customer_id']);
@@ -578,6 +576,8 @@ class Controller {
                     $this->orders_table->add_line_item($order_id, $line_item[1], $line_item[0], $line_item[2]);
                 }
             }
+            $order_success_message = 'Thanks for your order! Order ID #' . $order_id;
+            $order_error_message = '';
             // show order page again
             $template = $this->twig->load('order_now.twig');
             echo $template->render(['standard_plan' => $standard_plan, 'gluten_free_plan' => $gluten_free_plan, 'vegetarian_plan' => $vegetarian_plan, 'vegan_plan' => $vegan_plan, 'keto_plan' => $keto_plan, 'diabetic_plan' => $diabetic_plan, 'order_error_message' => $order_error_message, 'order_success_message' => $order_success_message, 'add_on_juice' => $add_on_juice, 'add_on_fruit' => $add_on_fruit, 'add_on_hummus' => $add_on_hummus, 'zip_codes' => $zip_codes, 'subtotal' => $subtotal, 'line_items' => $line_items, 'tax' => $tax, 'total' => $total, 'show_total_table' => $show_total_table,
