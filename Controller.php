@@ -115,7 +115,7 @@ class Controller {
         $template = $this->twig->load('meal_options.twig');
         echo $template->render(['meal_plans' => $meal_plans, 'add_ons' => $add_ons]);
     }
-    
+
     private function processShowCurrentMealsPage() {
         $current_meals = $this->meal_plans_table->get_current_meals();
         $template = $this->twig->load('current_meals.twig');
@@ -140,13 +140,14 @@ class Controller {
         $template = $this->twig->load('order_history.twig');
         echo $template->render(['orders' => $orders]);
     }
-    
+
     private function processShowOrderHistoryPageDateAscending() {
         $customer_id = $_SESSION['customer_id'];
         $orders = $this->orders_table->get_orders_and_line_items_ascending($customer_id);
         $template = $this->twig->load('order_history.twig');
         echo $template->render(['orders' => $orders]);
     }
+
     private function processShowOrderNowPage() {
         $order_error_message = '';
         $order_success_message = '';
@@ -209,7 +210,7 @@ class Controller {
             $log_in_error_message = 'Invalid username or password.';
             $log_in_success_message = '';
             $template = $this->twig->load('log_in.twig');
-            echo $template->render(['log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
+            echo $template->render(['username' => $username, 'password' => $password, 'log_in_error_message' => $log_in_error_message, 'log_in_success_message' => $log_in_success_message]);
         }
     }
 
@@ -261,7 +262,7 @@ class Controller {
         // if validator comes back with errors
         if (!empty($error_first_name) || !empty($error_last_name) || !empty($error_street_address) || !empty($error_city) ||
                 !empty($error_state_field) || !empty($error_zip_code) || !empty($error_username) || !empty($error_phone) ||
-                !empty($error_phone) || !empty($error_password) || !empty($error_confirm_password)) {
+                !empty($error_phone) || !empty($error_password) || !empty($error_confirm_password) || !empty($error_email)) {
             $this->processShowSignUpErrors($first_name, $error_first_name,
                     $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
                     $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
@@ -322,6 +323,7 @@ class Controller {
 
     function processCalculateOrderTotal() {
         $order_error_message = '';
+        $order_success_message = '';
         $standard_plan = $this->meal_plans_table->get_meal_plan(1);
         $gluten_free_plan = $this->meal_plans_table->get_meal_plan(2);
         $vegetarian_plan = $this->meal_plans_table->get_meal_plan(3);

@@ -6,7 +6,7 @@
         <p class="w-75 mx-auto">New options added weekly.</p>
         <p class="w-75 mx-auto">Ready to get started? <a href=".?action=Show Order Now">Order Now</a></p>
         {% for current_meal in current_meals %}
-            <h2 class="pt-3">{{ current_meal.planName }}</h2>
+            <h2 class="pt-3">{{ current_meal.planName|e }}</h2>
         <div class="meal-card-container row card-deck mt-3">
                 <div class="col-lg-4 col-md-6 d-flex px-0 card-col">
                     <div class="card">

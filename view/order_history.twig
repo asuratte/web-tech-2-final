@@ -20,10 +20,10 @@
                 </thead>
                 {% for order in orders %}
                     <tr>
-                        <td>{{ order.orderDate }}</td>
-                        <td>{{ order.orderID }}</td>
-                        <td>{{ order.itemName }} <span class="color-highlight">x</span> {{ order.itemQuantity }} <span class="color-highlight">|</span> ${{ order.itemTotal }}</td>
-                        <td>{{ order.orderTotal }}</td>
+                        <td>{{ order.orderDate|e }}</td>
+                        <td>{{ order.orderID|e }}</td>
+                        <td>{{ order.itemName|e }} <span class="color-highlight">x</span> {{ order.itemQuantity|e }} <span class="color-highlight">|</span> ${{ order.itemTotal|e }}</td>
+                        <td>{{ order.orderTotal|e }}</td>
                     </tr>
                 {% endfor %}
             </table>
