@@ -9,6 +9,9 @@
             {% if order_error_message is not empty %}
                 <p class="alert alert-danger order-alert mt-4 mx-auto">{{ order_error_message|e }}</p>
             {% endif %}
+            {% if order_success_message is not empty %}
+                <p class="alert alert-success order-alert mt-4 mx-auto">{{ order_success_message|e }}</p>
+            {% endif %}
             {% if show_total_table == true %}
                 <div class="order-total text-left mt-5">
                     <table class="table table-bordered table-sm mb-4">
