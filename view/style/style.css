@@ -150,7 +150,7 @@ p.field-description {
     max-width: 25rem;
 }
 
-#sign_up_form, .sign-up-alert {
+#sign_up_form, .sign-up-alert, #account_form, .account-alert {
     max-width: 33rem;
 }
 

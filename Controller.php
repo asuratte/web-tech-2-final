@@ -72,6 +72,9 @@ class Controller {
             case 'Show My Account':
                 $this->processShowMyAccountPage();
                 break;
+            case 'Update account':
+                $this->processUpdateAccount();
+                break;
             case 'Show Order History':
                 $this->processShowOrderHistoryPage();
                 break;
@@ -130,8 +133,11 @@ class Controller {
     }
 
     private function processShowMyAccountPage() {
+        $customer_data = $this->customers_table->get_customer_by_username($_SESSION['username']);
+        $states = $this->states_table->get_states();
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
         $template = $this->twig->load('my_account.twig');
-        echo $template->render();
+        echo $template->render(['customer_data' => $customer_data, 'states' => $states, 'meal_plans' => $meal_plans]);
     }
 
     private function processShowOrderHistoryPage() {
@@ -275,6 +281,49 @@ class Controller {
         }
     }
 
+    private function processUpdateAccount() {
+        $has_errors = false;
+        // get input from form
+        $first_name = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $last_name = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $street_address = filter_input(INPUT_POST, 'streetAddress', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $state_field = filter_input(INPUT_POST, 'state', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $zip_code = filter_input(INPUT_POST, 'zipCode', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $phone = filter_input(INPUT_POST, 'phoneNumber', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $dietary_preference = filter_input(INPUT_POST, 'dietaryPreference');
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $confirm_password = filter_input(INPUT_POST, 'confirmPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        // check required fields with validator
+        $error_first_name = $this->validator->checkTextField($first_name);
+        $error_last_name = $this->validator->checkTextField($last_name);
+        $error_street_address = $this->validator->checkTextField($street_address);
+        $error_city = $this->validator->checkTextField($city);
+        $error_state_field = $this->validator->checkTextField($state_field);
+        $error_zip_code = $this->validator->checkZipCode($zip_code, true, 1, 21);
+        $error_email = $this->validator->checkEmail($email);
+        $error_phone = $this->validator->checkPhone($phone);
+        $error_username = $this->validator->checkUpdateUsername($username);
+        $error_password = $this->validator->checkPassword($password);
+        $error_confirm_password = $this->validator->checkPasswordsMatch($confirm_password, $password);
+        // if validator comes back with errors
+        if (!empty($error_first_name) || !empty($error_last_name) || !empty($error_street_address) || !empty($error_city) ||
+                !empty($error_state_field) || !empty($error_zip_code) || !empty($error_username) || !empty($error_phone) ||
+                !empty($error_phone) || !empty($error_password) || !empty($error_confirm_password) || !empty($error_email)) {
+            $this->processShowUpdateErrors($first_name, $error_first_name,
+                    $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
+                    $confirm_password, $error_confirm_password, $dietary_preference);
+        } else {
+            $this->processUpdateCustomer($first_name, $error_first_name,
+                    $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+                    $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
+                    $confirm_password, $error_confirm_password, $dietary_preference);
+        }
+    }
+
     private function processShowSignUpErrors($first_name, $error_first_name,
             $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
             $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
@@ -285,6 +334,49 @@ class Controller {
         $sign_up_success_message = '';
         $template = $this->twig->load('sign_up.twig');
         echo $template->render(['sign_up_error_message' => $sign_up_error_message, 'sign_up_success_message' => $sign_up_success_message,
+            'meal_plans' => $meal_plans, 'states' => $states, 'first_name' => $first_name, 'error_first_name' => $error_first_name,
+            'last_name' => $last_name, 'error_last_name' => $error_last_name, 'street_address' => $street_address, 'error_street_address' => $error_street_address,
+            'city' => $city, 'error_city' => $error_city, 'state_field' => $state_field, 'error_state_field' => $error_state_field,
+            'zip_code' => $zip_code, 'error_zip_code' => $error_zip_code, 'username' => $username, 'error_username' => $error_username, 'phone' => $phone,
+            'error_phone' => $error_phone, 'email' => $email,
+            'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password,
+            'error_confirm_password' => $error_confirm_password, 'dietary_preference' => $dietary_preference]);
+    }
+
+    private function processShowUpdateErrors($first_name, $error_first_name,
+            $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+            $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
+            $confirm_password, $error_confirm_password, $dietary_preference) {
+        $states = $this->states_table->get_states();
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $has_errors = true;
+        $my_account_error_message = 'There was a problem with your submission. Please resolve any errors and try again.';
+        $my_account_success_message = '';
+        $template = $this->twig->load('my_account.twig');
+        echo $template->render(['has_errors' => $has_errors, 'my_account_error_message' => $my_account_error_message, 'my_account_success_message' => $my_account_success_message,
+            'meal_plans' => $meal_plans, 'states' => $states, 'first_name' => $first_name, 'error_first_name' => $error_first_name,
+            'last_name' => $last_name, 'error_last_name' => $error_last_name, 'street_address' => $street_address, 'error_street_address' => $error_street_address,
+            'city' => $city, 'error_city' => $error_city, 'state_field' => $state_field, 'error_state_field' => $error_state_field,
+            'zip_code' => $zip_code, 'error_zip_code' => $error_zip_code, 'username' => $username, 'error_username' => $error_username, 'phone' => $phone,
+            'error_phone' => $error_phone, 'email' => $email,
+            'error_email' => $error_email, 'password' => $password, 'confirm_password' => $confirm_password, 'error_password' => $error_password,
+            'error_confirm_password' => $error_confirm_password, 'dietary_preference' => $dietary_preference]);
+    }
+
+    private function processUpdateCustomer($first_name, $error_first_name,
+            $last_name, $error_last_name, $street_address, $error_street_address, $city, $error_city, $state_field, $error_state_field, $zip_code,
+            $error_zip_code, $username, $error_username, $phone, $error_phone, $email, $error_email, $password, $error_password,
+            $confirm_password, $error_confirm_password, $dietary_preference) {
+        $states = $this->states_table->get_states();
+        $meal_plans = $this->meal_plans_table->get_meal_plans();
+        $my_account_error_message = '';
+        $my_account_success_message = 'You have successfully updated your account.';
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $this->customers_table->update_customer($first_name, $last_name,
+                $street_address, $city, $state_field, $zip_code, $phone, $email,
+                $dietary_preference, $username, $hash, $_SESSION['customer_id']);
+        $template = $this->twig->load('my_account.twig');
+        echo $template->render(['my_account_error_message' => $my_account_error_message, 'my_account_success_message' => $my_account_success_message,
             'meal_plans' => $meal_plans, 'states' => $states, 'first_name' => $first_name, 'error_first_name' => $error_first_name,
             'last_name' => $last_name, 'error_last_name' => $error_last_name, 'street_address' => $street_address, 'error_street_address' => $error_street_address,
             'city' => $city, 'error_city' => $error_city, 'state_field' => $state_field, 'error_state_field' => $error_state_field,

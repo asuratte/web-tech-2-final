@@ -15,7 +15,7 @@ class CustomersTable {
         $customers->execute();
         return $customers;
     }
-    
+
     function get_customer_by_username($username) {
         $query = 'SELECT * FROM customers
               WHERE username = :username';
@@ -44,6 +44,39 @@ class CustomersTable {
         $statement->bindValue(':dietaryPreference', $dietary_preference);
         $statement->bindValue(':username', $username);
         $statement->bindValue(':password', $password);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+
+    function update_customer($first_name, $last_name,
+            $street_address, $city, $state, $zip_code, $phone, $email,
+            $dietary_preference, $username, $password, $customer_id) {
+        $query = 'UPDATE customers
+              SET firstName = :first_name,
+                  lastName = :last_name,
+                  streetAddress = :street_address,
+                  city = :city,
+                  state = :state,
+                  zipCode = :zip_code,
+                  phoneNumber = :phone,
+                  email = :email,
+                  dietaryPreference = :dietary_preference,
+                  username = :username,
+                  password = :password
+              WHERE customerID = :customer_id';
+        $statement = $this->db->getDB()->prepare($query);
+        $statement->bindValue(':first_name', $first_name);
+        $statement->bindValue(':last_name', $last_name);
+        $statement->bindValue(':street_address', $street_address);
+        $statement->bindValue(':city', $city);
+        $statement->bindValue(':state', $state);
+        $statement->bindValue(':zip_code', $zip_code);
+        $statement->bindValue(':phone', $phone);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':dietary_preference', $dietary_preference);
+        $statement->bindValue(':username', $username);
+        $statement->bindValue(':password', $password);
+        $statement->bindValue(':customer_id', $customer_id);
         $statement->execute();
         $statement->closeCursor();
     }

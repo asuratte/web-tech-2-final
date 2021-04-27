@@ -56,6 +56,16 @@ class Validator {
         }
     }
 
+    public function checkUpdateUsername($value, $required = true) {
+        $error_message = $this->checkTextField($value, $required, 9);
+        if (!empty($error_message)) {
+            return $error_message;
+        } else if ($this->customers_table->checkUsernameExists($value) == true && $value != $_SESSION['username']) {
+            $error_message = 'The username you have entered is already taken. Please choose a new one.';
+            return $error_message;
+        }
+    }
+
     public function checkPhone($value, $required = true) {
         $error_message = $this->checkTextField($value, $required);
         $pattern = '/^\([[:digit:]]{3}\)\s[[:digit:]]{3}-[[:digit:]]{4}$/';
