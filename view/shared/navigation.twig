@@ -8,27 +8,29 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <li class="nav-item {% if page_title == 'Home' %}{{ 'active' }}{% endif %}">
                         <a class="nav-link" href=".?action=Show Home">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMeals" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Meal Options</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMeals">
-                            <a class="dropdown-item" href=".?action=Show Meal Options">View Meal Options</a>
-                            <a class="dropdown-item" href=".?action=Show Current Meals">View Current Meals</a>
+                            <ul class="subnav p-0">
+                                <li class="nav-item {% if page_title == 'Meal Options' %}{{ 'active' }}{% endif %}"><a class="dropdown-item nav-sub-link" href=".?action=Show Meal Options">View Meal Options</a></li>
+                                <li class="nav-item {% if page_title == 'Current Meals' %}{{ 'active' }}{% endif %}"><a class="dropdown-item nav-sub-link" href=".?action=Show Current Meals">View Current Meals</a></li>
+                            </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {% if page_title == 'Order Now' %}{{ 'active' }}{% endif %}">
                         <a class="nav-link" href=".?action=Show Order Now">Order Now</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {% if page_title == 'FAQ' %}{{ 'active' }}{% endif %}">
                         <a class="nav-link" href=".?action=Show FAQ">FAQ</a>
                     </li>
                     {% if session.is_valid_user is not defined %}
-                        <li class="nav-item">
+                        <li class="nav-item {% if page_title == 'Log In' %}{{ 'active' }}{% endif %}">
                             <a class="nav-link" href=".?action=Show Log In">Log In</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {% if page_title == 'Sign Up' %}{{ 'active' }}{% endif %}">
                             <a class="nav-link" href=".?action=Show Sign Up">Sign Up</a>
                         </li>
                     {% else %}
@@ -37,14 +39,16 @@
                                 <i class="fas fa-user pr-2 my-account-icon"></i>{{ session.first_name|e }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
-                                <a class="dropdown-item" href=".?action=Show Order History">Order History</a>
-                                <a class="dropdown-item" href=".?action=Show My Account">My Account</a>
-                                <a class="dropdown-item" href=".?action=Log Out">Log Out</a>
+                                <ul class="subnav p-0">
+                                    <li class="nav-item {% if page_title == 'Order History' %}{{ 'active' }}{% endif %}"><a class="dropdown-item nav-sub-link" href=".?action=Show Order History">Order History</a></li>
+                                    <li class="nav-item {% if page_title == 'My Account' %}{{ 'active' }}{% endif %}"><a class="dropdown-item nav-sub-link" href=".?action=Show My Account">My Account</a></li>
+                                    <li class="nav-item"><a class="dropdown-item nav-sub-link" href=".?action=Log Out">Log Out</a></li>
                             </div>
                         </li>
                     {% endif %}
                 </ul>
             </div>
+
         </div>
     </nav>
 </header>

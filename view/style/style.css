@@ -24,6 +24,34 @@ body {
     padding-left: .35rem;
 }
 
+.navbar-dark .navbar-nav .nav-sub-link:before {
+    content: "\2022";
+    color: #ffffff;
+    padding-right: .35rem;
+}
+
+.navbar-dark .navbar-nav .nav-sub-link:after {
+    content: "\2022";
+    color: #ffffff;
+    padding-left: .35rem;
+}
+
+.navbar-dark .navbar-nav .active>.nav-sub-link:before {
+    content: "\2022";
+    color: #ff9933;
+    padding-right: .35rem;
+}
+
+.navbar-dark .navbar-nav .active>.nav-sub-link:after {
+    content: "\2022";
+    color: #ff9933;
+    padding-left: .35rem;
+}
+
+ul.subnav {
+    list-style-type: none;
+}
+
 .navbar-dark .navbar-nav .nav-link {
     color: #f8f9fa;
 }
@@ -115,8 +143,6 @@ form button.btn.btn-primary:hover {
     color: #ff9933;
     border-color: #ff9933;
 }
-
-
 
 .form-group>label {
     font-weight: 700;
