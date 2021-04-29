@@ -8,89 +8,23 @@
                 href="mailto:hello@madisonstreetmealprep.com">hello@madisonstreetmealprep.com</a> and we'll be happy
             to help.</p>
         <div id="accordion" class="mt-5">
-            <div class="card">
-                <div class="card-header bg-custom-light" id="headingOne">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                                aria-expanded="true" aria-controls="collapseOne">
-                            What kind of containers do you use?
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body">
-                        We deliver our meals in glass containers with BPA-free plastic locking lids. Your used
-                        containers can be picked up when your next order is delivered, or dropped off at our
-                        kitchen.
+            {% for faq in faqs %}
+                <div class="card">
+                    <div class="card-header bg-custom-light" id="heading{{ faq.faqID }}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ faq.faqID }}"
+                                    {% if faq.faqID == 1 %}{{ 'aria-expanded="true"' }}{% else %}{{'aria-expanded="false"'}}{% endif %} aria-controls="collapse{{ faq.faqID }}">
+                                {{ faq.faqTitle }}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse{{ faq.faqID }}" class="collapse {% if faq.faqID == 1 %}{{'show'}}{% endif %}" aria-labelledby="heading{{ faq.faqID }}" data-parent="#accordion">
+                        <div class="card-body">
+                            {{ faq.faqDescription }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-header bg-custom-light" id="headingTwo">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
-                                aria-expanded="false" aria-controls="collapseTwo">
-                            How far in advance are the meals cooked?
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                    <div class="card-body">
-                        We prep meals the same day they are delivered to ensure optimal freshness.
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header bg-custom-light" id="headingThree">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
-                                aria-expanded="false" aria-controls="collapseThree">
-                            What are the benefits of getting prepped meals?
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                    <div class="card-body">
-                        Madison Street Meal Prep can save you hours each week by doing all of the shopping,
-                        meal-planning, cooking, and portioning for you. Our healthy, vegetable-forward meals will
-                        help you to feel your best.
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header bg-custom-light" id="headingFour">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour"
-                                aria-expanded="false" aria-controls="collapseFour">
-                            How much will this cost?
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-                    <div class="card-body">
-                        This varies based on the meal plan, add-ons, and number of meals that you select. Please
-                        visit our
-                        <a href=".?action=Show Meal Options">visit our Meal Options page</a> for plan pricing information, and our <a href=".?action=Show Order Now">Order Now page</a> when you're ready to get started.
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header bg-custom-light" id="headingFive">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive"
-                                aria-expanded="false" aria-controls="collapseFive">
-                            What precautions are you taking around COVID-19?
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
-                    <div class="card-body">
-                        We are following all federal and state guidelines including social distancing, hand washing,
-                        and mask wearing. We've also closed our kitchen to the public, and are offering contactless
-                        delivery and curbside pickup only.
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </main>
 </div>

@@ -8,6 +8,7 @@ require_once './model/CustomersTable.php';
 require_once './model/AddOnsTable.php';
 require_once './model/ZipCodesTable.php';
 require_once './model/OrdersTable.php';
+require_once './model/FaqTable.php';
 require_once 'autoload.php';
 
 class Controller {
@@ -20,6 +21,7 @@ class Controller {
     private $add_ons_table;
     private $zip_codes_table;
     private $orders_table;
+    private $faq_table;
     private $twig;
 
     /**
@@ -36,6 +38,7 @@ class Controller {
         $this->states_table = new StatesTable($this->db);
         $this->customers_table = new CustomersTable($this->db);
         $this->orders_table = new OrdersTable($this->db);
+        $this->faq_table = new FaqTable($this->db);
         $this->validator = new Validator($this->db, $this->customers_table);
         $this->action = $this->getAction();
     }
@@ -108,8 +111,9 @@ class Controller {
     }
 
     private function processShowFAQPage() {
+        $faqs = $this->faq_table->get_faqs();
         $template = $this->twig->load('faq.twig');
-        echo $template->render();
+        echo $template->render(['faqs' => $faqs]);
     }
 
     private function processShowMealOptionsPage() {
